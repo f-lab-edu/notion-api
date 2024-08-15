@@ -1,5 +1,6 @@
 package com.example.notion_api.entity;
 
+import com.example.notion_api.annotations.PageVersionDateTimeFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -18,6 +19,7 @@ public class UserEntity {
     @Size(min = 8)
     private String password;
 
+    @PageVersionDateTimeFormat(pattern = "M월 d일 , a h:mm")
     private LocalDateTime lastPageUpdated;
 
     @NotBlank

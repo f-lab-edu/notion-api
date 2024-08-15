@@ -1,10 +1,12 @@
 package com.example.notion_api.controller;
 
 import com.example.notion_api.dto.page.PageDTO;
+import com.example.notion_api.formatter.PageVersionDateTimeFormatter;
 import com.example.notion_api.service.PageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,6 +14,11 @@ import java.util.List;
 @Controller
 @RequestMapping("/api")
 public class PageController {
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.addCustomFormatter(new PageVersionDateTimeFormatter("M월 d일 , a h:mm"));
+    }
 
     @Autowired
     PageServiceImpl pageService;

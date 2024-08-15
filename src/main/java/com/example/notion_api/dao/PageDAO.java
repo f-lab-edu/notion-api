@@ -8,10 +8,10 @@ import java.util.List;
 public interface PageDAO {
 
     /** 특정 사용자에게 기본 템플릿 페이지 생성 */
-    List<PageDTO> createDefaultTemplate(String pageType, String userId, LocalDateTime localDateTime);
+    List<PageDTO> createDefaultTemplate(String pageType, String userId, String formattedTime);
 
     /** 페이지 생성 */
-    PageDTO createPage(String userId, String pageType, LocalDateTime localDateTime);
+    PageDTO createPage(String userId, String pageType, String formattedTime);
 
     /** 모든 페이지 목록 가져오기 */
     List<String> getPageList(String userId);

@@ -2,6 +2,7 @@ package com.example.notion_api.service;
 
 import com.example.notion_api.dao.PageDAO;
 import com.example.notion_api.dto.page.PageDTO;
+import com.example.notion_api.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
@@ -19,14 +20,16 @@ public class PageServiceImpl implements PageService{
     @Override
     public List<PageDTO> createDefaultTemplate(String pageType, String userId) {
         LocalDateTime pageCreatedTime = LocalDateTime.now();
-        List<PageDTO> pageDTOList = pageDAO.createDefaultTemplate(pageType, userId, pageCreatedTime);
+        String formattedTime = DateTimeUtil.formatDateTime(pageCreatedTime);
+        List<PageDTO> pageDTOList = pageDAO.createDefaultTemplate(pageType, userId, formattedTime);
         return pageDTOList;
     }
 
     @Override
     public PageDTO createPage(String userId, String pageType) {
         LocalDateTime pageCreatedTime = LocalDateTime.now();
-        PageDTO pageDTO = pageDAO.createPage(userId,pageType, pageCreatedTime);
+        String formattedTime = DateTimeUtil.formatDateTime(pageCreatedTime);
+        PageDTO pageDTO = pageDAO.createPage(userId,pageType, formattedTime);
         return pageDTO;
     }
 
