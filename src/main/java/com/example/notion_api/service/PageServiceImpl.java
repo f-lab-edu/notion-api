@@ -12,7 +12,8 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public PageDTO createPage(String pageType, String userId, LocalDateTime localDateTime) {
+    public PageDTO createPage(String userId, String pageType) {
+        LocalDateTime pageCreatedTime = LocalDateTime.now();
         return null;
     }
 
@@ -27,7 +28,7 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public LocalDateTime getLastUpdatedDate(String userId) {
+    public LocalDateTime getLastUpdatedTIme(String userId) {
         return null;
     }
 

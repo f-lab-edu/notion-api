@@ -1,87 +1,30 @@
 package com.example.notion_api.controller;
 
+import com.example.notion_api.service.PageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Controller
 @RequestMapping("/api")
 public class PageController {
 
+    @Autowired
+    PageServiceImpl pageService;
     /**
      * page 생성 요청 처리
      * */
-    @PostMapping("/defaultpage/{userId}")
+    @PostMapping("/newpage")
     public String createDefaultPage(
-        @PathVariable String userId
+        @RequestParam String userId,
+        @RequestParam String pageType
     ){
+        /* pageType : to-do, weekplan, diary, table, board,
+        *             list, timeline, calender, gallery
+        * */
+        pageService.createPage(userId, pageType);
         return "";
     }
-
-    @PostMapping("/todo/{userId}")
-    public String createTodoPage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/weekplan/{userId}")
-    public String createWeekplanPage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/diary/{userId}")
-    public String createDiaryPage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/table/{userId}")
-    public String createTablePage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/board/{userId}")
-    public String createBoardPage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/list/{userId}")
-    public String createListPage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/timeline/{userId}")
-    public String createTimelinePage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/calender/{userId}")
-    public String createCalenderPage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
-    @PostMapping("/gallery/{userId}")
-    public String createGalleryPage(
-            @PathVariable String userId
-    ){
-        return "";
-    }
-
 
 
     /**

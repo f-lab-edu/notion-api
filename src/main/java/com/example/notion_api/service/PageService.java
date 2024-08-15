@@ -11,7 +11,7 @@ public interface PageService {
     List<PageDTO> createDefaultTemplate(String pageType, String userId);
 
     /** 페이지 생성 */
-    PageDTO createPage(String pageType, String userId, LocalDateTime localDateTime);
+    PageDTO createPage(String userId, String pageType);
 
     /** 모든 페이지 목록 가져오기 */
     List<String> getPageList(String userId);
@@ -20,7 +20,7 @@ public interface PageService {
     PageDTO getPage(String userId, String title);
 
     /** 마지막 업데이트된 시간 체크 */
-    LocalDateTime getLastUpdatedDate(String userId);
+    LocalDateTime getLastUpdatedTIme(String userId);
 
     /** 페이지 업데이트 */
     List<PageDTO> updatePages(String userId, List<PageDTO> pageDTOs);
