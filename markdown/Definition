@@ -1,0 +1,62 @@
+
+
+페에지 제목   : <n-title font="bold",sort="left",hint="제목없음",text=""/>
+페이지 아이콘  : <n-icon path = "..."/> (이미지의 위치 값을 어떻게 표현할지?)
+페이지 커버   : <n-cover path = "..."/>
+
+아이콘 및 이미지를 저장해두는 S3 공간이 필요.
+
+content 종류별
+
+텍스트 : <n-content type="text", text=""/>
+제목1 : <n-content type="title1", text=""/>
+제목2 : <n-content type="title2", text=""/>
+제목3 : <n-content type="title3", text=""/>
+페이지 :
+할 일 목록 : <n-content type="todo", state="unchecked", hint="할 일"></n-content>
+            (state는 할 일 목록 요소의 체크, 언체크를 의미)
+
+글머리 기호 목록 : <n-content type="list", text=""/>
+번호 매기기 목록 : <n-content type="orderlist", order="1"/>
+토글 목록      : <n-content type="toggle",text=""/>
+코드          : <n-content type="code", lang="C++", text=""/>
+인용          : <n-content type="quotation", text=""/>
+콜 아웃        : <n-content type="callout", path="...", text=""/>
+수학 공식 블록  : <n-content type="math"></n-content>
+제목 토글1     : <n-content type="titletoggle1", text=""/>
+제목 토글2     : <n-content type="titletoggle2", text=""/>
+제목 토글3     : <n-content type="titletoggle3", text=""/>
+2개의 열       : <n-content type="partition", text1="",text2=""/>
+3개의 열       : <n-content type="partition", text1="",text2="",text3=""/>
+4개의 열       : <n-content type="partition", text1="",text2="",text3="",text4=""/>
+5개의 열       : <n-content type="partition", text1="",text2="",text3="",text4="",text5=""/>
+
+
+테이블 head type 정의
+텍스트 : text
+숫자 : number
+선택 : choice
+다중 선택 : multichoice
+상태 : state
+날짜 : date
+사람 : people
+파일과 미디어 : file-media
+체크박스 : checkbox
+URL : URL
+이메일 : email
+전화번호 : tel
+수식 : formula
+관계형 : relation
+롤업 : rollup
+생성 일시 : createddate
+생성자 : creater
+최종 편집 일시 : lastediteddate
+최종 편집자 : lasteditor
+버튼 : button
+
+
+ - 글꼴 여러개 적용시
+
+ <n-content font="bold&italic&line"></n-content>
+                  볼드체, 이탤릭체, 밑줄체
+
