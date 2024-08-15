@@ -1,0 +1,4 @@
+ - 글꼴 여러개 적용시
+
+ <n-content font="bold&italic&line"></n-content>
+                  볼드체, 이탤릭체, 밑줄체
