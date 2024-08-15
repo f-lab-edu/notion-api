@@ -30,3 +30,13 @@ content 종류별
 3개의 열       : <n-content type="partition", text1="",text2="",text3=""/>
 4개의 열       : <n-content type="partition", text1="",text2="",text3="",text4=""/>
 5개의 열       : <n-content type="partition", text1="",text2="",text3="",text4="",text5=""/>
+
+
+
+ - 글꼴 여러개 적용시
+
+ <n-content font="bold&italic&line"></n-content>
+                  볼드체, 이탤릭체, 밑줄체
+
+
+                  asdfasdfasdf
