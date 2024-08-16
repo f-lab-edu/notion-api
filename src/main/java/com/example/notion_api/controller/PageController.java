@@ -26,15 +26,15 @@ public class PageController {
      * page 생성 요청 처리
      * */
     @PostMapping("/newpage")
-    public PageDTO createDefaultPage(
+    public ResponseEntity<PageDTO> createDefaultPage(
         @RequestParam String userId,
         @RequestParam String pageType
     ){
-        /* pageType : to-do, weekplan, diary, table, board,
+        /* pageType : default, to-do, weekplan, diary, table, board,
         *             list, timeline, calender, gallery
         * */
         PageDTO pageDTO = pageService.createPage(userId, pageType);
-        return pageDTO;
+        return ResponseEntity.ok(pageDTO);
     }
 
 
@@ -42,12 +42,12 @@ public class PageController {
      * 페이지 템플릿 반환(특정 페이지 선택시)
      * */
     @GetMapping("/page")
-    public PageDTO getPage(
+    public ResponseEntity<PageDTO> getPage(
             @RequestParam String userId,
             @RequestParam String title
     ){
         PageDTO pageDTO = pageService.getPage(userId, title);
-        return pageDTO;
+        return ResponseEntity.ok(pageDTO);
     }
 
     /**
