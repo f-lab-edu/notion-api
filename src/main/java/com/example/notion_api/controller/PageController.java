@@ -30,7 +30,7 @@ public class PageController {
         @RequestParam String userId,
         @RequestParam String pageType
     ){
-        /* pageType : to-do, weekplan, diary, table, board,
+        /* pageType : default, to-do, weekplan, diary, table, board,
         *             list, timeline, calender, gallery
         * */
         PageDTO pageDTO = pageService.createPage(userId, pageType);

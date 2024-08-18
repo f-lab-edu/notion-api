@@ -8,7 +8,7 @@ import java.util.List;
 public interface PageService {
 
     /** 계정 생성시 기본적으로 제공하는 페이지 생성 */
-    List<PageDTO> createDefaultTemplate(String pageType, String userId);
+    List<PageDTO> createDefaultTemplate(String userId, String pageType);
 
     /** 페이지 생성 */
     PageDTO createPage(String userId, String pageType);

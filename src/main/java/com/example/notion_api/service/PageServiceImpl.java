@@ -18,7 +18,7 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<PageDTO> createDefaultTemplate(String pageType, String userId) {
+    public List<PageDTO> createDefaultTemplate(String userId, String pageType) {
         LocalDateTime pageCreatedTime = LocalDateTime.now();
         String formattedTime = DateTimeUtil.formatDateTime(pageCreatedTime);
         List<PageDTO> pageDTOList = pageDAO.createDefaultTemplate(userId, pageType, formattedTime);
