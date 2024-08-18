@@ -17,5 +17,5 @@ public interface AwsS3DAO {
     void deleteFile(String bucketName, String keyName) throws Exception;
 
     /** 파일 업데이트 */
-    void updateFile(String bucketName, String keyName, String filePath);
+    void updateFile(String bucketName, String keyName, String filePath) throws Exception;
 }
