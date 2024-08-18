@@ -21,7 +21,7 @@ public class PageServiceImpl implements PageService{
     public List<PageDTO> createDefaultTemplate(String pageType, String userId) {
         LocalDateTime pageCreatedTime = LocalDateTime.now();
         String formattedTime = DateTimeUtil.formatDateTime(pageCreatedTime);
-        List<PageDTO> pageDTOList = pageDAO.createDefaultTemplate(pageType, userId, formattedTime);
+        List<PageDTO> pageDTOList = pageDAO.createDefaultTemplate(userId, pageType, formattedTime);
         return pageDTOList;
     }
 
@@ -29,7 +29,7 @@ public class PageServiceImpl implements PageService{
     public PageDTO createPage(String userId, String pageType) {
         LocalDateTime pageCreatedTime = LocalDateTime.now();
         String formattedTime = DateTimeUtil.formatDateTime(pageCreatedTime);
-        PageDTO pageDTO = pageDAO.createPage(userId,pageType, formattedTime);
+        PageDTO pageDTO = pageDAO.createPage(userId, pageType, formattedTime);
         return pageDTO;
     }
 

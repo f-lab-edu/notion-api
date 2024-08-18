@@ -1,0 +1,28 @@
+<n-title font="bold",sort="left",hint="제목없음",text="{date}"/>
+<n-icon path = "...">
+<n-cover path = "...">
+<n-content type="titletoggle1" text="월요일">
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+</n-content>
+<n-content type="titletoggle1" text="화요일">
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+</n-content>
+<n-content type="titletoggle1" text="수요일">
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+</n-content>
+<n-content type="titletoggle1" text="목요일">
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+</n-content>
+<n-content type="titletoggle1" text="금요일">
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+    <n-content type="todo", state="unchecked", hint="할 일",text="..."/>
+</n-content>

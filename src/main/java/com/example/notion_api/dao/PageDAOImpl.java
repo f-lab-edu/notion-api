@@ -7,8 +7,9 @@ import java.util.List;
 
 public class PageDAOImpl implements PageDAO{
 
+
     @Override
-    public List<PageDTO> createDefaultTemplate(String pageType, String userId, String formattedTime) {
+    public List<PageDTO> createDefaultTemplate(String userId, String pageType, String formattedTime) {
         return null;
     }
 
