@@ -22,7 +22,7 @@ public class PageDTO {
 
     private String coverImage;
 
-    @PageVersionDateTimeFormat(pattern = "M월 d일 , a h:mm")
+    @PageVersionDateTimeFormat(pattern = "dd.MM.yy HH:mm:ss")
     private LocalDateTime updatedDate;
 
     private String content;

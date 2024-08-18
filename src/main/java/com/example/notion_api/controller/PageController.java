@@ -17,7 +17,7 @@ public class PageController {
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-        binder.addCustomFormatter(new PageVersionDateTimeFormatter("M월 d일 , a h:mm"));
+        binder.addCustomFormatter(new PageVersionDateTimeFormatter("dd.MM.yy HH:mm:ss"));
     }
 
     @Autowired

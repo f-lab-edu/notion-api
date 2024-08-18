@@ -6,7 +6,7 @@ import java.time.format.DateTimeParseException;
 
 public class DateTimeUtil {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("M월 d일 , a h:mm");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm:ss");
 
     public static String formatDateTime(LocalDateTime dateTime){
         return dateTime.format(FORMATTER);

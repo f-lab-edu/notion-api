@@ -20,6 +20,6 @@ public class PageSyncResultDTO {
 
     private String title;
 
-    @PageVersionDateTimeFormat(pattern = "M월 d일 , a h:mm")
+    @PageVersionDateTimeFormat(pattern = "dd.MM.yy HH:mm:ss")
     private LocalDateTime updatedDate;
 }

@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PageVersionDateTimeFormat {
-    String pattern() default "M월 d일 , a h:mm";
+    String pattern() default "dd.MM.yy HH:mm:ss";
 }
