@@ -1,0 +1,3 @@
+<n-title font="bold",sort="left",hint="제목없음",text=""/>
+<n-icon path = "...">
+<n-cover path = "...">
