@@ -1,9 +1,11 @@
 package com.example.notion_api.service;
 
 import com.example.notion_api.dto.user.UserDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService{
     @Override
     public boolean existsUser(String userId) {

@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 @Component
 public class AwsS3Config {
 
-    @Value("{aws.s3.credentials.access-key}")
+    @Value("${aws.s3.credentials.access-key}")
     private String accessKey;
 
     @Value("${aws.s3.credentials.secret-key}")
@@ -26,17 +27,18 @@ public class AwsS3Config {
     @Value("${aws.s3.credentials.region}")
     private String region;
 
-    @Value("${aws.s3.credentials.bucket-name}")
+    @Value("${aws.s3.credentials.bucket}")
     private String bucketName;
+
+    private AmazonS3 s3Client;
 
     @Bean
     public AmazonS3 s3Client() {
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
-        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
+        s3Client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .withRegion(region)
                 .build();
-
         return s3Client;
     }
 

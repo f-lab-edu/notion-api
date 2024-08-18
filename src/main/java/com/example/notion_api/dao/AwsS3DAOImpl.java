@@ -8,12 +8,14 @@ import com.example.notion_api.dto.page.PageDTO;
 import com.example.notion_api.dto.page.PageSyncResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class AwsS3DAOImpl implements AwsS3DAO{
 
     private final AmazonS3 s3Client;

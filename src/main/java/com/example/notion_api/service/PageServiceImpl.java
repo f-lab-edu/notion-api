@@ -4,10 +4,12 @@ import com.example.notion_api.dao.PageDAO;
 import com.example.notion_api.dto.page.PageDTO;
 import com.example.notion_api.util.DateTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Service
 public class PageServiceImpl implements PageService{
 
     private final PageDAO pageDAO;

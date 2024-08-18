@@ -1,10 +1,12 @@
 package com.example.notion_api.dao;
 
 import com.example.notion_api.dto.page.PageDTO;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Repository
 public class PageDAOImpl implements PageDAO{
 
 
