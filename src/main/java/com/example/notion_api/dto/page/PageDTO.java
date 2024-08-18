@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Setter
 public class PageDTO {
 
+    private String userId;
+
     private String title;
 
     private String icon;

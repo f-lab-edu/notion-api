@@ -11,7 +11,7 @@ public interface AwsS3DAO {
 
     /** keyName(s3 객체) 구조
      *
-     *   userId _ title _ version
+     *   userId _ title _ date
      *
      * */
 

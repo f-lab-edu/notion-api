@@ -18,11 +18,8 @@ import java.io.IOException;
 @Component
 public class S3AppInitializer {
 
-
-
     @Value("${aws.s3.credentials.bucket}")
     private String bucketName;
-
 
     private final AmazonS3 s3Client;
 

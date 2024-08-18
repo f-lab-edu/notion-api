@@ -25,7 +25,7 @@ public class PageController {
     /**
      * page 생성 요청 처리
      * */
-    @PostMapping("/newpage")
+    @PostMapping("/new-page")
     public PageDTO createDefaultPage(
         @RequestParam String userId,
         @RequestParam String pageType
