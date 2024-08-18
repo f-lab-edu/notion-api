@@ -4,10 +4,15 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.example.notion_api.dto.page.PageDTO;
+import com.example.notion_api.dto.page.PageSyncResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AwsS3DAOImpl implements AwsS3DAO{
 
@@ -25,6 +30,24 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     }
 
     @Override
+    public String uploadImage(String bucketName, String keyName, MultipartFile file) throws IOException {
+        s3Client.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), null));
+        return s3Client.getUrl(bucketName, keyName).toString();
+    }
+
+    @Override
+    public String uploadVideo(String bucketName, String keyName, MultipartFile file) throws IOException {
+        s3Client.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), null));
+        return s3Client.getUrl(bucketName, keyName).toString();
+    }
+
+    @Override
+    public String uploadAudio(String bucketName, String keyName, MultipartFile file) throws IOException {
+        s3Client.putObject(new PutObjectRequest(bucketName, keyName, file.getInputStream(), null));
+        return s3Client.getUrl(bucketName, keyName).toString();
+    }
+
+    @Override
     public void uploadStringAsFile(String bucketName, String keyName, String content) throws IOException {
         File file = File.createTempFile(keyName,".txt");
         FileWriter writer = new FileWriter(file);
@@ -32,6 +55,20 @@ public class AwsS3DAOImpl implements AwsS3DAO{
         writer.close();
 
         s3Client.putObject(new PutObjectRequest(bucketName, keyName, file));
+    }
+
+    @Override
+    public void uploadStringAsFileList(String bucketName, List<String> keyNames, List<String> contents) throws IOException {
+        for (int i=0; i<keyNames.size(); i++){
+            String keyName = keyNames.get(i);
+            String content = contents.get(i);
+
+            File file = File.createTempFile(keyName, ".txt");
+            FileWriter writer = new FileWriter(file);
+            writer.write(content);
+
+            s3Client.putObject(new PutObjectRequest(bucketName, keyName, file));
+        }
     }
 
     @Override
@@ -51,7 +88,18 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     }
 
     @Override
-    public void deleteFile(String bucketName, String keyName) throws Exception {
+    public List<String> downloadFileAsStringList(String bucketName, List<String> keyNames) throws IOException {
+        List<String> fileContents = new ArrayList<>();
+
+        for (String keyName : keyNames){
+            String content = downloadFileAsString(bucketName, keyName);
+            fileContents.add(content);
+        }
+        return fileContents;
+    }
+
+    @Override
+    public void deleteFile(String bucketName, String keyName){
         s3Client.deleteObject(bucketName, keyName);
     }
 
@@ -59,5 +107,10 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     public void updateFile(String bucketName, String keyName, String filePath) throws Exception{
         deleteFile(bucketName, keyName);
         uploadFile(bucketName, keyName, filePath);
+    }
+
+    @Override
+    public PageSyncResultDTO compareAndSyncFiles(PageDTO pageDTO, String bucketName, String keyName) {
+        return null;
     }
 }
