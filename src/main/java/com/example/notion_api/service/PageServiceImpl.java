@@ -46,7 +46,6 @@ public class PageServiceImpl implements PageService{
         pageDTO.setIcon("no-icon");
         pageDTO.setCoverImage("no-image");
         pageDTO.setUpdatedDate(formattedTime);
-        bucketName = userId+"_no-title_"+formattedTime;
 
         String keyName;
         if (pageType.equals("default")){
@@ -80,6 +79,8 @@ public class PageServiceImpl implements PageService{
             keyName = "DefaultPageConfig/GalleryPage";
             pageDTO.setContent(awsS3DAO.downloadFileAsString(bucketName,keyName));
         }
+        // aws s3 서버에 페이지 객체 저장
+        awsS3DAO.uploadStringAsFile(bucketName,userId+"/",pageDTO.getContent());
 
         return pageDTO;
     }
