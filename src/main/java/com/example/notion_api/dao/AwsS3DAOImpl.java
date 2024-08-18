@@ -26,9 +26,11 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     }
 
     @Override
-    public void uploadFile(String bucketName, String keyName, String filePath) throws IOException {
+    public String uploadFile(String bucketName, String keyName, String filePath) throws IOException {
         File file = new ClassPathResource(filePath).getFile();
         s3Client.putObject(new PutObjectRequest(bucketName, keyName, file));
+
+        return "";
     }
 
     @Override

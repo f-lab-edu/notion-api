@@ -16,7 +16,7 @@ public interface AwsS3DAO {
      * */
 
     /** 파일 업로드(markdown 템플릿을 업로드할 때 사용) */
-    void uploadFile(String bucketName, String keyName, String filePath) throws IOException;
+    String uploadFile(String bucketName, String keyName, String filePath) throws IOException;
 
     /** 이미지, 동영상, 미디어 파일 업로드 */
     String uploadImage(String bucketName, String keyName, MultipartFile file) throws IOException;

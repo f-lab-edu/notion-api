@@ -2,6 +2,7 @@ package com.example.notion_api.service;
 
 import com.example.notion_api.dto.page.PageDTO;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public interface PageService {
     List<PageDTO> createDefaultTemplate(String userId, String pageType);
 
     /** 페이지 생성 */
-    PageDTO createPage(String userId, String pageType);
+    PageDTO createPage(String userId, String pageType) throws IOException;
 
     /** 모든 페이지 목록 가져오기 */
     List<String> getPageList(String userId);

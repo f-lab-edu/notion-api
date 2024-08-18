@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -29,7 +30,7 @@ public class PageController {
     public PageDTO createDefaultPage(
         @RequestParam String userId,
         @RequestParam String pageType
-    ){
+    ) throws IOException {
         /* pageType : default, to-do, weekplan, diary, table, board,
         *             list, timeline, calender, gallery
         * */
