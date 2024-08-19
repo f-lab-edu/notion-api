@@ -136,7 +136,8 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     }
 
     @Override
-    public void deleteFile(String bucketName, String prefix){
+    public void deleteFile(String bucketName, String userId, String pageId){
+        String prefix = userId+"/"+userId+"_"+pageId;
         ListObjectsV2Request request = new ListObjectsV2Request()
                 .withBucketName(bucketName)
                 .withPrefix(prefix);
@@ -152,7 +153,7 @@ public class AwsS3DAOImpl implements AwsS3DAO{
 
     @Override
     public void updateFile(String bucketName, String keyName, String filePath) throws Exception{
-        deleteFile(bucketName, keyName);
+//        deleteFile(bucketName, keyName);
         uploadFile(bucketName, keyName, filePath);
     }
 

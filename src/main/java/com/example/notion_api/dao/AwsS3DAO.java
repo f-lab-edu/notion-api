@@ -37,7 +37,7 @@ public interface AwsS3DAO {
     List<String> downloadFileAsStringList(String bucketName, List<String> keyName) throws IOException;
 
     /** 파일 삭제 */
-    void deleteFile(String bucketName, String prefix);
+    void deleteFile(String bucketName, String uesrId, String pageId);
 
     /** 파일 업데이트 */
     void updateFile(String bucketName, String keyName, String filePath) throws Exception;
