@@ -136,8 +136,18 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     }
 
     @Override
-    public void deleteFile(String bucketName, String keyName){
-        s3Client.deleteObject(bucketName, keyName);
+    public void deleteFile(String bucketName, String prefix){
+        ListObjectsV2Request request = new ListObjectsV2Request()
+                .withBucketName(bucketName)
+                .withPrefix(prefix);
+
+        ListObjectsV2Result result = s3Client.listObjectsV2(request);
+        List<S3ObjectSummary> objects = result.getObjectSummaries();
+
+        for (S3ObjectSummary object : objects) {
+            String keyName = object.getKey();
+            s3Client.deleteObject(bucketName, keyName);
+        }
     }
 
     @Override

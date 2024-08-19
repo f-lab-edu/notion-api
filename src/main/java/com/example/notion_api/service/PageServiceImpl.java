@@ -144,7 +144,8 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public void deletePage(String userId, PageDTO pageDTO) {
-
+    public void deletePage(String userId, String pageId) {
+        String prefix = userId+"/"+userId+"_"+pageId;
+        awsS3DAO.deleteFile(bucketName,prefix);
     }
 }

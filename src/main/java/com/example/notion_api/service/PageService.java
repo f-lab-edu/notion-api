@@ -27,5 +27,5 @@ public interface PageService {
     List<PageDTO> updatePages(String userId, List<PageDTO> pageDTOs);
 
     /** 페이지 삭제 */
-    void deletePage(String userId, PageDTO pageDTO);
+    void deletePage(String userId, String pageId);
 }

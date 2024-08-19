@@ -65,10 +65,10 @@ public class PageController {
     @PutMapping("/update-page/{userId}")
     @ResponseBody
     public ResponseEntity<List<PageDTO>> updatePage(
-            @PathVariable String userId,
             @RequestBody List<PageDTO> pageDTOs
     ){
-        List<PageDTO> updatedPages = pageService.updatePages(userId,pageDTOs);
+        List<PageDTO> updatedPages = pageService.updatePages(
+                                                pageDTOs.get(0).getUserId(),pageDTOs);
 
         return ResponseEntity.ok(updatedPages);
     }
@@ -76,13 +76,13 @@ public class PageController {
     /**
      * 페이지 삭제
      * */
-    @DeleteMapping("/delete-page/{userId}")
+    @PostMapping("/delete-page")
     @ResponseBody
     public ResponseEntity<String> deletePage(
-            @PathVariable String userId,
-            @RequestBody PageDTO pageDTO
+            @RequestParam String userId,
+            @RequestParam String pageId
     ){
-        pageService.deletePage(userId,pageDTO);
+        pageService.deletePage(userId, pageId);
         return ResponseEntity.ok("페이지가 정상적으로 삭제되었습니다.");
     }
 }
