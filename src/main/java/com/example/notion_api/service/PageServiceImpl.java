@@ -77,7 +77,7 @@ public class PageServiceImpl implements PageService{
             pageDTO.setContent(awsS3DAO.downloadFileAsString(bucketName,keyName));
         }
         // aws s3 서버에 페이지 객체 저장
-        String storeKeyName = userId+"_no-title_"+formattedTime;
+        String storeKeyName = userId+"_no-title_no-icon_no-image_"+formattedTime;
         awsS3DAO.uploadStringAsFile(bucketName,userId+"/"+storeKeyName,pageDTO.getContent());
 
         return pageDTO;
