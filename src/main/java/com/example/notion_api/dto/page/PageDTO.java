@@ -16,6 +16,8 @@ public class PageDTO {
 
     private String userId;
 
+    private String pageId;
+
     private String title;
 
     private String icon;

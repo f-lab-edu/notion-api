@@ -50,10 +50,10 @@ public class PageController {
     /**
      * 페이지 템플릿 반환(특정 페이지 선택시)
      * */
-    @GetMapping("/page")
+    @PostMapping("/page")
     public ResponseEntity<PageDTO> getPage(
             @RequestBody PageDTO pageDTO
-    ){
+    ) throws IOException {
         PageDTO checkedPageDTO = pageService.getPage(pageDTO);
         return ResponseEntity.ok(checkedPageDTO);
     }

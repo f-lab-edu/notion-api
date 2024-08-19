@@ -18,7 +18,7 @@ public interface PageService {
     List<String> getPageTitleList(String userId);
 
     /** 목록에서 선택한 페이지 렌더링 */
-    PageDTO getPage(PageDTO localPageDTO);
+    PageDTO getPage(PageDTO localPageDTO) throws IOException;
 
     /** 마지막 업데이트된 시간 체크 */
     LocalDateTime getLastUpdatedTIme(String userId);

@@ -32,6 +32,7 @@ public interface AwsS3DAO {
     /** 파일 다운로드 -> 파일을 문자열 객체로 변환 */
     String downloadFileAsString(String bucketName, String keyName) throws IOException;
 
+    String getS3StorageFileContent(String bucketName, String userId, String pageId) throws IOException;
     /** 여러 개의 파일 다운로드 -> 여러개의 문자열 객체로 변환 */
     List<String> downloadFileAsStringList(String bucketName, List<String> keyName) throws IOException;
 
@@ -43,6 +44,12 @@ public interface AwsS3DAO {
 
     /** 로컬과 s3 저장소의 파일 수정날짜 비교 */
     PageSyncResultDTO compareAndSyncFiles(PageDTO pageDTO, String bucketName, String keyName);
+
+    /** s3 저장소의 특정 파일의 수정날짜 가져오기 */
+    String getS3StorageFileDateTime(String bucketName, String userId, String pageId) throws IOException;
+
+    /** s3 키 값 가져오기 */
+    String getKeyName(String bucketName, String userId, String pageId) throws IOException;
 
     /** s3 저장소의 파일 이름 모두 가져오기 */
     List<String> getListOfKeyName(String bucketName, String userId);

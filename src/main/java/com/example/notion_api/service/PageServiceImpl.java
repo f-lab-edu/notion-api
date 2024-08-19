@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
+
+import static com.example.notion_api.util.DateTimeUtil.FORMATTER;
 
 @Service
 public class PageServiceImpl implements PageService{
@@ -76,8 +79,9 @@ public class PageServiceImpl implements PageService{
             keyName = "DefaultPageConfig/GalleryPage";
             pageDTO.setContent(awsS3DAO.downloadFileAsString(bucketName,keyName));
         }
+        String uniqueId = UUID.randomUUID().toString();
         // aws s3 서버에 페이지 객체 저장
-        String storeKeyName = userId+"_no-title_no-icon_no-image_"+formattedTime;
+        String storeKeyName = userId+"_"+uniqueId+"_no-title_no-icon_no-image_"+formattedTime;
         awsS3DAO.uploadStringAsFile(bucketName,userId+"/"+storeKeyName,pageDTO.getContent());
 
         return pageDTO;
@@ -91,11 +95,42 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public PageDTO getPage(PageDTO localPageDTO) {
+    public PageDTO getPage(PageDTO localPageDTO) throws IOException {
         /** 페이지 버전 비교하여 로컬 또는 서버의 페이지 업데이트 결정. */
+        String userId = localPageDTO.getUserId();
+        String pageId = localPageDTO.getPageId();
+        String localDateTimeStr = localPageDTO.getUpdatedDate();
+        String s3StorageDateTimeStr = awsS3DAO.getS3StorageFileDateTime(bucketName,userId,pageId);
+
+        LocalDateTime localDateTime = LocalDateTime.parse(localDateTimeStr,FORMATTER);
+        LocalDateTime s3StorageDateTime = LocalDateTime.parse(s3StorageDateTimeStr,FORMATTER);
+
+        LocalDateTime mostRecentDateTime = localDateTime.isAfter(s3StorageDateTime)?localDateTime : s3StorageDateTime;
+        String mostRecentDateTimeStr = mostRecentDateTime.format(FORMATTER);
+        if (mostRecentDateTimeStr.equals(localDateTimeStr)){
+            String keyName = userId+"/"+
+                                userId+"_"+localPageDTO.getTitle()+"_"+
+                                localPageDTO.getIcon()+"_"+localPageDTO.getCoverImage()+"_" +
+                                localDateTimeStr;
+            String content = localPageDTO.getContent();
 
 
-        return null;
+            awsS3DAO.uploadStringAsFile(bucketName,keyName,content);
+            return localPageDTO;
+        }else {
+            String keyName = awsS3DAO.getKeyName(bucketName,userId,pageId);
+            String content = awsS3DAO.getS3StorageFileContent(bucketName,userId,pageId);
+            String[] parts = keyName.split("_");
+            PageDTO s3StorageDTO = new PageDTO();
+            s3StorageDTO.setUserId(userId);
+            s3StorageDTO.setPageId(pageId);
+            s3StorageDTO.setTitle(parts[2]);
+            s3StorageDTO.setIcon(parts[3]);
+            s3StorageDTO.setCoverImage(parts[4]);
+            s3StorageDTO.setUpdatedDate(parts[5]);
+            s3StorageDTO.setContent(content);
+            return s3StorageDTO;
+        }
     }
 
     @Override
