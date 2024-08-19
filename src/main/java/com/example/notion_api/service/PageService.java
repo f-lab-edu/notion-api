@@ -18,7 +18,7 @@ public interface PageService {
     List<String> getPageTitleList(String userId);
 
     /** 목록에서 선택한 페이지 렌더링 */
-    PageDTO getPage(String userId, String title, String updated);
+    PageDTO getPage(PageDTO localPageDTO);
 
     /** 마지막 업데이트된 시간 체크 */
     LocalDateTime getLastUpdatedTIme(String userId);

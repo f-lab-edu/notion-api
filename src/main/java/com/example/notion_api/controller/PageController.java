@@ -52,12 +52,10 @@ public class PageController {
      * */
     @GetMapping("/page")
     public ResponseEntity<PageDTO> getPage(
-            @RequestParam String userId,
-            @RequestParam String title,
-            @RequestParam String updatedDate
+            @RequestBody PageDTO pageDTO
     ){
-        PageDTO pageDTO = pageService.getPage(userId, title, updatedDate);
-        return ResponseEntity.ok(pageDTO);
+        PageDTO checkedPageDTO = pageService.getPage(pageDTO);
+        return ResponseEntity.ok(checkedPageDTO);
     }
 
     /**

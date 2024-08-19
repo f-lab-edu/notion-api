@@ -1,7 +1,6 @@
 package com.example.notion_api.service;
 
 import com.example.notion_api.dao.AwsS3DAOImpl;
-import com.example.notion_api.dao.PageDAO;
 import com.example.notion_api.dto.page.PageDTO;
 import com.example.notion_api.util.DateTimeUtil;
 import com.example.notion_api.util.PageTitleUtil;
@@ -20,20 +19,17 @@ public class PageServiceImpl implements PageService{
     private String bucketName;
 
     private final AwsS3DAOImpl awsS3DAO;
-    private final PageDAO pageDAO;
 
     @Autowired
-    public PageServiceImpl(AwsS3DAOImpl awsS3DAO, PageDAO pageDAO) {
+    public PageServiceImpl(AwsS3DAOImpl awsS3DAO) {
         this.awsS3DAO = awsS3DAO;
-        this.pageDAO = pageDAO;
     }
 
     @Override
     public List<PageDTO> createDefaultTemplate(String userId, String pageType) {
         LocalDateTime pageCreatedTime = LocalDateTime.now();
         String formattedTime = DateTimeUtil.formatDateTime(pageCreatedTime);
-        List<PageDTO> pageDTOList = pageDAO.createDefaultTemplate(userId, pageType, formattedTime);
-        return pageDTOList;
+        return null;
     }
 
     @Override
@@ -95,26 +91,25 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public PageDTO getPage(String userId, String title, String updatedDate) {
+    public PageDTO getPage(PageDTO localPageDTO) {
         /** 페이지 버전 비교하여 로컬 또는 서버의 페이지 업데이트 결정. */
-        PageDTO pageDTO = pageDAO.getPage(userId, title);
-        return pageDTO;
+
+
+        return null;
     }
 
     @Override
     public LocalDateTime getLastUpdatedTIme(String userId) {
-        LocalDateTime lastUpdatedTime = pageDAO.getLastUpdatedTIme(userId);
-        return lastUpdatedTime;
+        return null;
     }
 
     @Override
     public List<PageDTO> updatePages(String userId, List<PageDTO> pageDTOs) {
-        List<PageDTO> updatedPages = pageDAO.updatePages(userId, pageDTOs);
-        return updatedPages;
+        return null;
     }
 
     @Override
     public void deletePage(String userId, PageDTO pageDTO) {
-        pageDAO.deletePage(userId,pageDTO);
+
     }
 }
