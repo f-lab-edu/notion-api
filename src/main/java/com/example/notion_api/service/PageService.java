@@ -15,10 +15,10 @@ public interface PageService {
     PageDTO createPage(String userId, String pageType) throws IOException;
 
     /** 모든 페이지 목록 가져오기 */
-    List<String> getPageList(String userId);
+    List<String> getPageTitleList(String userId);
 
     /** 목록에서 선택한 페이지 렌더링 */
-    PageDTO getPage(String userId, String title);
+    PageDTO getPage(String userId, String title, String updated);
 
     /** 마지막 업데이트된 시간 체크 */
     LocalDateTime getLastUpdatedTIme(String userId);

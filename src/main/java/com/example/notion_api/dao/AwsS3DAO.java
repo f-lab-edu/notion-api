@@ -43,4 +43,7 @@ public interface AwsS3DAO {
 
     /** 로컬과 s3 저장소의 파일 수정날짜 비교 */
     PageSyncResultDTO compareAndSyncFiles(PageDTO pageDTO, String bucketName, String keyName);
+
+    /** s3 저장소의 파일 이름 모두 가져오기 */
+    List<String> getListOfKeyName(String bucketName, String userId);
 }

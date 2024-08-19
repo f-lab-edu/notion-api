@@ -86,13 +86,14 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<String> getPageList(String userId) {
-        List<String> pageList = pageDAO.getPageList(userId);
+    public List<String> getPageTitleList(String userId) {
+        List<String> pageList = awsS3DAO.getListOfKeyName(bucketName,userId);
         return pageList;
     }
 
     @Override
-    public PageDTO getPage(String userId, String title) {
+    public PageDTO getPage(String userId, String title, String updatedDate) {
+        /** 페이지 버전 비교하여 로컬 또는 서버의 페이지 업데이트 결정. */
         PageDTO pageDTO = pageDAO.getPage(userId, title);
         return pageDTO;
     }

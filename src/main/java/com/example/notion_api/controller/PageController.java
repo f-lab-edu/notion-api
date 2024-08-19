@@ -27,7 +27,7 @@ public class PageController {
      * page 생성 요청 처리
      * */
     @PostMapping("/new-page")
-    public PageDTO createDefaultPage(
+    public PageDTO createPage(
         @RequestParam String userId,
         @RequestParam String pageType
     ) throws IOException {
@@ -38,6 +38,14 @@ public class PageController {
         return pageDTO;
     }
 
+    @GetMapping("/page/list")
+    public List<String> getPageList(
+        @RequestParam String userId
+    ){
+        List<String> pageList = pageService.getPageTitleList(userId);
+        return pageList;
+    }
+
 
     /**
      * 페이지 템플릿 반환(특정 페이지 선택시)
@@ -45,9 +53,10 @@ public class PageController {
     @GetMapping("/page")
     public PageDTO getPage(
             @RequestParam String userId,
-            @RequestParam String title
+            @RequestParam String title,
+            @RequestParam String updatedDate
     ){
-        PageDTO pageDTO = pageService.getPage(userId, title);
+        PageDTO pageDTO = pageService.getPage(userId, title, updatedDate);
         return pageDTO;
     }
 

@@ -1,9 +1,7 @@
 package com.example.notion_api.dao;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import com.example.notion_api.dto.page.PageDTO;
 import com.example.notion_api.dto.page.PageSyncResultDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +114,24 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     @Override
     public PageSyncResultDTO compareAndSyncFiles(PageDTO pageDTO, String bucketName, String keyName) {
         return null;
+    }
+
+    @Override
+    public List<String> getListOfKeyName(String bucketName, String userId) {
+        List<String> objectKeys = new ArrayList<>();
+        String prefix = userId + "/";
+        ListObjectsV2Request listObjectsV2Request = new ListObjectsV2Request()
+                                                            .withBucketName(bucketName)
+                                                            .withPrefix(prefix);
+        ListObjectsV2Result result;
+
+        do {
+            result = s3Client.listObjectsV2(listObjectsV2Request);
+            result.getObjectSummaries().forEach(summary -> objectKeys.add(summary.getKey()));
+
+            listObjectsV2Request.setContinuationToken(result.getNextContinuationToken());
+        }while (result.isTruncated());
+
+        return objectKeys;
     }
 }
