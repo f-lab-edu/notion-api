@@ -24,7 +24,7 @@ public interface PageService {
     LocalDateTime getLastUpdatedTIme(String userId);
 
     /** 페이지 업데이트 */
-    List<PageDTO> updatePages(String userId, List<PageDTO> pageDTOs);
+    List<PageDTO> updatePages(String userId, List<PageDTO> pageDTOs) throws IOException;
 
     /** 페이지 삭제 */
     void deletePage(String userId, String pageId);

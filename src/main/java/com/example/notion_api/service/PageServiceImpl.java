@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -81,7 +82,13 @@ public class PageServiceImpl implements PageService{
         }
         String uniqueId = UUID.randomUUID().toString();
         // aws s3 서버에 페이지 객체 저장
-        String storeKeyName = userId+"_"+uniqueId+"_no-title_no-icon_no-image_"+formattedTime;
+        String storeKeyName = new StringBuilder().append(userId).append("_")
+                                                    .append(uniqueId).append("_")
+                                                    .append("no-title").append("_")
+                                                    .append("no-icon").append("_")
+                                                    .append("no-image").append("_")
+                                                    .append(formattedTime)
+                                                    .toString();
         awsS3DAO.uploadStringAsFile(bucketName,userId+"/"+storeKeyName,pageDTO.getContent());
 
         return pageDTO;
@@ -142,8 +149,13 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<PageDTO> updatePages(String userId, List<PageDTO> pageDTOs) {
-        return null;
+    public List<PageDTO> updatePages(String userId, List<PageDTO> pageDTOs) throws IOException {
+        List<PageDTO> updatePages = new ArrayList<>();
+        for (PageDTO pageDTO : pageDTOs){
+            PageDTO updatedPage = getPage(pageDTO);
+            updatePages.add(updatedPage);
+        }
+        return updatePages;
     }
 
     @Override

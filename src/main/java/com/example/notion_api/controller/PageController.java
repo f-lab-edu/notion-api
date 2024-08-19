@@ -62,11 +62,11 @@ public class PageController {
      * 페이지 데이터 업데이트
      * (로컬과 서버의 업데이트 시간 비교)
      * */
-    @PutMapping("/update-page/{userId}")
+    @PutMapping("/update-pages")
     @ResponseBody
     public ResponseEntity<List<PageDTO>> updatePage(
             @RequestBody List<PageDTO> pageDTOs
-    ){
+    ) throws IOException {
         List<PageDTO> updatedPages = pageService.updatePages(
                                                 pageDTOs.get(0).getUserId(),pageDTOs);
 
