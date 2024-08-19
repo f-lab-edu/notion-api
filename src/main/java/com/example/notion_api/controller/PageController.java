@@ -27,7 +27,7 @@ public class PageController {
      * page 생성 요청 처리
      * */
     @PostMapping("/new-page")
-    public PageDTO createPage(
+    public ResponseEntity<PageDTO> createPage(
         @RequestParam String userId,
         @RequestParam String pageType
     ) throws IOException {
@@ -35,15 +35,15 @@ public class PageController {
         *             list, timeline, calender, gallery
         * */
         PageDTO pageDTO = pageService.createPage(userId, pageType);
-        return pageDTO;
+        return ResponseEntity.ok(pageDTO);
     }
 
     @GetMapping("/page/list")
-    public List<String> getPageList(
+    public ResponseEntity<List<String>> getPageList(
         @RequestParam String userId
     ){
         List<String> pageList = pageService.getPageTitleList(userId);
-        return pageList;
+        return ResponseEntity.ok(pageList);
     }
 
 
@@ -51,13 +51,13 @@ public class PageController {
      * 페이지 템플릿 반환(특정 페이지 선택시)
      * */
     @GetMapping("/page")
-    public PageDTO getPage(
+    public ResponseEntity<PageDTO> getPage(
             @RequestParam String userId,
             @RequestParam String title,
             @RequestParam String updatedDate
     ){
         PageDTO pageDTO = pageService.getPage(userId, title, updatedDate);
-        return pageDTO;
+        return ResponseEntity.ok(pageDTO);
     }
 
     /**

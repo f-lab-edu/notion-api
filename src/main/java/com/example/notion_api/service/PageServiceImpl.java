@@ -4,6 +4,7 @@ import com.example.notion_api.dao.AwsS3DAOImpl;
 import com.example.notion_api.dao.PageDAO;
 import com.example.notion_api.dto.page.PageDTO;
 import com.example.notion_api.util.DateTimeUtil;
+import com.example.notion_api.util.PageTitleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -80,15 +81,17 @@ public class PageServiceImpl implements PageService{
             pageDTO.setContent(awsS3DAO.downloadFileAsString(bucketName,keyName));
         }
         // aws s3 서버에 페이지 객체 저장
-        awsS3DAO.uploadStringAsFile(bucketName,userId+"/",pageDTO.getContent());
+        String storeKeyName = userId+"_no-title_"+formattedTime;
+        awsS3DAO.uploadStringAsFile(bucketName,userId+"/"+storeKeyName,pageDTO.getContent());
 
         return pageDTO;
     }
 
     @Override
     public List<String> getPageTitleList(String userId) {
-        List<String> pageList = awsS3DAO.getListOfKeyName(bucketName,userId);
-        return pageList;
+        List<String> tempPageList = awsS3DAO.getListOfKeyName(bucketName,userId);
+        List<String> pageTitleList = PageTitleUtil.extractTitles(tempPageList);
+        return pageTitleList;
     }
 
     @Override

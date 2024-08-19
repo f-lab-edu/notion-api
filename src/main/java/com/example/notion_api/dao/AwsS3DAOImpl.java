@@ -124,8 +124,11 @@ public class AwsS3DAOImpl implements AwsS3DAO{
                                                             .withBucketName(bucketName)
                                                             .withPrefix(prefix);
         ListObjectsV2Result result;
-
+        String continuationToken = null;
         do {
+            if (continuationToken != null){
+                listObjectsV2Request.setContinuationToken(continuationToken);
+            }
             result = s3Client.listObjectsV2(listObjectsV2Request);
             result.getObjectSummaries().forEach(summary -> objectKeys.add(summary.getKey()));
 
