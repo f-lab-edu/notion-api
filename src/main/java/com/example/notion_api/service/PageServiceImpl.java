@@ -108,10 +108,13 @@ public class PageServiceImpl implements PageService{
         LocalDateTime mostRecentDateTime = localDateTime.isAfter(s3StorageDateTime)?localDateTime : s3StorageDateTime;
         String mostRecentDateTimeStr = mostRecentDateTime.format(FORMATTER);
         if (mostRecentDateTimeStr.equals(localDateTimeStr)){
-            String keyName = userId+"/"+
-                                userId+"_"+localPageDTO.getTitle()+"_"+
-                                localPageDTO.getIcon()+"_"+localPageDTO.getCoverImage()+"_" +
-                                localDateTimeStr;
+            String keyName = new StringBuilder().append(userId).append("/")
+                                                .append(userId).append("_")
+                                                .append(localPageDTO.getTitle()).append("_")
+                                                .append(localPageDTO.getIcon()).append("_")
+                                                .append(localPageDTO.getCoverImage()).append("_")
+                                                .append(localDateTimeStr)
+                                                .toString();
             String content = localPageDTO.getContent();
 
 

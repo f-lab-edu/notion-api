@@ -92,7 +92,10 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     @Override
     public String getS3StorageFileContent(String bucketName, String userId, String pageId) throws IOException {
         // userId 및 pageId에 해당하는 파일의 keyName을 찾기 위한 prefix 설정
-        String prefix = userId + "/" + userId + "_" + pageId + "_";
+        String prefix = new StringBuilder().append(userId).append("/")
+                                            .append(userId).append("_")
+                                            .append(pageId)
+                                            .toString();
         ListObjectsV2Request request = new ListObjectsV2Request()
                 .withBucketName(bucketName)
                 .withPrefix(prefix);
@@ -137,7 +140,10 @@ public class AwsS3DAOImpl implements AwsS3DAO{
 
     @Override
     public void deleteFile(String bucketName, String userId, String pageId){
-        String prefix = userId+"/"+userId+"_"+pageId;
+        String prefix = new StringBuilder().append(userId).append("/")
+                                            .append(userId).append("_")
+                                            .append(pageId)
+                                            .toString();
         ListObjectsV2Request request = new ListObjectsV2Request()
                 .withBucketName(bucketName)
                 .withPrefix(prefix);
@@ -164,7 +170,11 @@ public class AwsS3DAOImpl implements AwsS3DAO{
 
     @Override
     public String getS3StorageFileDateTime(String bucketName, String userId, String pageId) {
-        String prefix = userId+"/"+userId+"_"+pageId+"_";
+        String prefix = new StringBuilder().append(userId).append("/")
+                                            .append(userId).append("_")
+                                            .append(pageId)
+                                            .toString();
+
         ListObjectsV2Request request = new ListObjectsV2Request()
                 .withBucketName(bucketName)
                 .withPrefix(prefix);
@@ -181,7 +191,10 @@ public class AwsS3DAOImpl implements AwsS3DAO{
 
     @Override
     public String getKeyName(String bucketName, String userId, String pageId) throws IOException {
-        String prefix = userId+"/"+userId+"_"+pageId+"_";
+        String prefix = new StringBuilder().append(userId).append("/")
+                                            .append(userId).append("_")
+                                            .append(pageId)
+                                            .toString();
         ListObjectsV2Request request = new ListObjectsV2Request()
                 .withBucketName(bucketName)
                 .withPrefix(prefix);
