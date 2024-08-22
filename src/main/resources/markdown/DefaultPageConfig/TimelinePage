@@ -1,5 +1,0 @@
-<n-title font="bold",sort="left",hint="제목없음",text=""/>
-<n-timeline type="title", title="타임라인 보기"/>
-<n-board-content title="카드1", type1="date",text="{todaydate}{date}",type2="people",text="",type3="state",text="시작전"/>
-<n-board-content title="카드2", type1="date",text="{todaydate}{date}",type2="people",text="",type3="state",text="시작전"/>
-<n-board-content title="카드3", type1="date",text="{todaydate}{date}",type2="people",text="",type3="state",text="시작전"/>
