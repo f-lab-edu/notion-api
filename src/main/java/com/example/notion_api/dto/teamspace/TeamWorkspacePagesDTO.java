@@ -12,7 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TeamspacePagesDTO {
+
+public class TeamWorkspacePagesDTO {
     private Long teamspaceId;
     private List<PageDTO> pageDTOs;
 }

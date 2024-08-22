@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter
 @Getter
-public class TeamspaceAddMemberDTO {
-    private Long teamspaceId;
-    private String uesrId;
-    private String memberId;
+@Setter
+public class TeamWorkspaceListDTO {
+    private List<Long> teamspaceId;
+    private List<String> teamspaceTitle;
 }
