@@ -12,7 +12,6 @@ import java.util.List;
 @Getter
 @Setter
 public class GetPageListDTO {
-    private String uesrId;
     private List<Long> pageId;
     private List<String> title;
 }

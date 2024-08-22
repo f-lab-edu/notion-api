@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class CreatePageDTO {
-    private String userId;
     private Long paegId;
     private String content;
 }
