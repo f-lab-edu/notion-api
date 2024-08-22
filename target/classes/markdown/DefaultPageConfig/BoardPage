@@ -1,5 +1,0 @@
-<n-title font="bold",sort="left",hint="제목없음",text=""/>
-<n-board title="보드 보기", state1="시작전", state2="진행 중", state3="완료/>
-<n-board-state1 title="카드1", type1="상태",text1="시작 전",type2="people",text2=""/>
-<n-board-state1 title="카드2", type1="상태",text1="시작 전",type2="people",text2=""/>
-<n-board-state1 title="카드3", type1="상태",text1="시작 전",type2="people",text2=""/>
