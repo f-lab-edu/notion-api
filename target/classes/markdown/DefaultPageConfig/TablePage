@@ -1,5 +1,0 @@
-<n-title font="bold",sort="left",hint="제목없음",text=""/>
-<n-table-head title="표",column="2", type1="title", text1="이름", type2="multichoice",text2="태그"/>
-<n-table-content column="2", text1="", text2=""/>
-<n-table-content column="2", text1="", text2=""/>
-<n-table-content column="2", text1="", text2=""/>
