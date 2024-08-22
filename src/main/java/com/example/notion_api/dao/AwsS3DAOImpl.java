@@ -6,37 +6,37 @@ import java.util.List;
 
 public class AwsS3DAOImpl implements AwsS3DAO{
     @Override
-    public void uploadFile(String bucketName, String keyName, String filePath) {
+    public void uploadLocalFile(String localPath, String remotePath, String fileName) {
 
     }
 
     @Override
-    public void uploadStringAsFile(String bucketName, String keyName, String content) {
+    public void uploadStringAsFile(String remotePath, String fileName, String content) {
 
     }
 
     @Override
-    public String downloadFileAsString(String bucketName, String keyName) {
+    public String downloadFileAsString(String remotePath, String fileName) {
         return "";
     }
 
     @Override
-    public void deleteFile(String bucketName, String keyName) {
+    public void deleteFile(String remotePath, String fileName) {
 
     }
 
     @Override
-    public List<String> getFileNames(String bucketName, String prefix) {
+    public List<String> getFileNames(String remotePath, String prefix) {
         return List.of();
     }
 
     @Override
-    public void updateFile(String bucketName, String keyName, String content) {
+    public void updateStringAsFile(String remotePath, String fileName, String content) {
 
     }
 
     @Override
-    public S3FileDTO getFileNameAndContent(String bucketName, String prefix) {
+    public S3FileDTO getFileNameAndContent(String remotePaht, String prefix) {
         return null;
     }
 }
