@@ -9,12 +9,12 @@ import java.util.List;
 public class PageServiceImpl implements PageService{
 
     @Override
-    public CreatePageDTO createPage(String uesrId, String pageType) {
+    public CreatePageDTO createPage(String userId, String pageType) {
         return null;
     }
 
     @Override
-    public GetPageListDTO getPageTilteList(String userId) {
+    public GetPageListDTO getPageTitleList(String userId) {
         return null;
     }
 
@@ -24,7 +24,7 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<PageDTO> getUpdatedPageByLogin(String uesrId, List<PageDTO> pageDTOs) {
+    public List<PageDTO> getUpdatedPageByLogin(String userId, List<PageDTO> pageDTOs) {
         return List.of();
     }
 
@@ -39,7 +39,7 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<PageDTO> createTemplatePages(String uesrId) {
+    public List<PageDTO> createTemplatePages(String userId) {
         return List.of();
     }
 

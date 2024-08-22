@@ -10,19 +10,19 @@ import java.util.List;
 @Service
 public interface PageService {
 
-    CreatePageDTO createPage(String uesrId, String pageType);
+    CreatePageDTO createPage(String userId, String pageType);
 
-    GetPageListDTO getPageTilteList(String userId);
+    GetPageListDTO getPageTitleList(String userId);
 
     PageDTO getPage(String userId,PageDTO pageDTO);
 
-    List<PageDTO> getUpdatedPageByLogin(String uesrId, List<PageDTO> pageDTOs);
+    List<PageDTO> getUpdatedPageByLogin(String userId, List<PageDTO> pageDTOs);
 
     List<PageDTO> getUpdatedPageByTimer(String userId, List<PageDTO> pageDTOs);
 
     String deletePage(String userId, String pageId);
 
-    List<PageDTO> createTemplatePages(String uesrId);
+    List<PageDTO> createTemplatePages(String userId);
 
     List<PageDTO> getPagesByVersion(String userId, String pageId);
 }
