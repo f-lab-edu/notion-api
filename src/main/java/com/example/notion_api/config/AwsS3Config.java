@@ -51,7 +51,7 @@ public class AwsS3Config {
             System.out.println("버킷 생성 [버킷 이름 : "+bucketName+"]");
         }else {
             System.out.println("버킷 생성 실패...(버킷이 이미 존재함)");
-            System.out.println(s3Client().getRegionName());;
+            System.out.println(s3Client().getRegionName());
         }
     }
 
