@@ -22,7 +22,6 @@ public class PageServiceImpl implements PageService{
 
     @Override
     public CreatePageDTO createPage(String userId, String pageType) throws IOException {
-        awsS3DAO.updateStringAsFile(userId,"test","test");
         return null;
     }
 
