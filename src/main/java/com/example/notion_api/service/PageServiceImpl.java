@@ -2,7 +2,8 @@ package com.example.notion_api.service;
 
 import com.example.notion_api.dao.AwsS3DAOImpl;
 import com.example.notion_api.dto.pages.CreatePageDTO;
-import com.example.notion_api.dto.pages.GetPageListDTO;
+import com.example.notion_api.dto.pages.PageIdTitleDTO;
+import com.example.notion_api.dto.pages.PageIdTitleListDTO;
 import com.example.notion_api.dto.pages.PageDTO;
 import com.example.notion_api.util.DateTimeUtil;
 import com.example.notion_api.util.PageUtil;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,8 +51,17 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public GetPageListDTO getPageTitleList(String userId) {
-        return null;
+    public PageIdTitleListDTO getPageTitleList(String userId) {
+        List<String> fileNames = awsS3DAO.getFileNames(userId,userId);
+        List<PageIdTitleDTO> pageIdTitleDTOList = new ArrayList<>();
+        for (String fileName : fileNames){
+            String[] parts = fileName.split("_");
+            String pageId = parts[0];
+            String title = parts[2];
+            PageIdTitleDTO pageIdTitleDTO = new PageIdTitleDTO(pageId,title);
+            pageIdTitleDTOList.add(pageIdTitleDTO);
+        }
+        return new PageIdTitleListDTO(pageIdTitleDTOList);
     }
 
     @Override

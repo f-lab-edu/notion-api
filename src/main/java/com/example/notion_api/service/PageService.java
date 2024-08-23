@@ -1,9 +1,8 @@
 package com.example.notion_api.service;
 
 import com.example.notion_api.dto.pages.CreatePageDTO;
-import com.example.notion_api.dto.pages.GetPageListDTO;
+import com.example.notion_api.dto.pages.PageIdTitleListDTO;
 import com.example.notion_api.dto.pages.PageDTO;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +11,7 @@ public interface PageService {
 
     CreatePageDTO createPage(String userId, String pageType) throws IOException;
 
-    GetPageListDTO getPageTitleList(String userId);
+    PageIdTitleListDTO getPageTitleList(String userId);
 
     PageDTO getPage(String userId,PageDTO pageDTO);
 
