@@ -21,6 +21,7 @@ public interface AwsS3DAO {
 
     /** 페이지 제목 목록 가져오기 */
     List<String> getFileNames(String remotePath, String prefix);
+    String getFileName(String remotePath, String prefix);
 
     /** 로그인 시 페이지 업데이트, 특정 시간마다 페이지 업데이트 */
     void updateStringAsFile(String remotePath, String fileName, String content) throws IOException;

@@ -31,8 +31,11 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     public void uploadLocalFile(String localPath, String remotePath, String fileName) throws IOException {
         String keyName = new StringBuilder().append(remotePath).append("/")
                                             .append(fileName).toString();
-        File file = new ClassPathResource(localPath).getFile();
-        amazonS3.putObject(new PutObjectRequest(bucketName, keyName, file));
+        File file = new File(localPath, fileName);
+        FileInputStream inputStream = new FileInputStream(file);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.length());
+        amazonS3.putObject(new PutObjectRequest(bucketName, keyName, inputStream, metadata));
     }
 
     @Override
@@ -90,6 +93,24 @@ public class AwsS3DAOImpl implements AwsS3DAO{
             request.setContinuationToken(result.getNextContinuationToken());
         } while (result.isTruncated());
         return fileNames;
+    }
+
+    @Override
+    public String getFileName(String remotePath, String prefix) {
+        String prefixWithPath = new StringBuilder().append(remotePath).append("/")
+                                                    .append(prefix).toString();
+        ListObjectsV2Request request = new ListObjectsV2Request()
+                .withBucketName(bucketName)
+                .withPrefix(prefixWithPath)
+                .withMaxKeys(1);
+        ListObjectsV2Result result = amazonS3.listObjectsV2(request);
+        List<S3ObjectSummary> objectSummaries = result.getObjectSummaries();
+
+        if (!objectSummaries.isEmpty()) {
+            return objectSummaries.get(0).getKey();
+        } else {
+            return "";
+        }
     }
 
     @Override
