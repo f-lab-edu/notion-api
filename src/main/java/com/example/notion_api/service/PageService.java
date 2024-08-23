@@ -13,7 +13,7 @@ public interface PageService {
 
     PageIdTitleListDTO getPageTitleList(String userId);
 
-    PageDTO getPage(String userId,PageDTO pageDTO);
+    PageDTO getPage(String userId,PageDTO pageDTO) throws IOException;
 
     List<PageDTO> getUpdatedPageByLogin(String userId, List<PageDTO> pageDTOs);
 
