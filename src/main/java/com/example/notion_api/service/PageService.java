@@ -19,7 +19,7 @@ public interface PageService {
 
     List<PageDTO> getUpdatedPageByTimer(String userId, List<PageDTO> pageDTOs);
 
-    String deletePage(String userId, String pageId);
+    void deletePage(String userId, String pageId);
 
     List<PageDTO> createTemplatePages(String userId);
 
