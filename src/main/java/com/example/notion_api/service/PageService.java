@@ -5,12 +5,12 @@ import com.example.notion_api.dto.pages.GetPageListDTO;
 import com.example.notion_api.dto.pages.PageDTO;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
-@Service
 public interface PageService {
 
-    CreatePageDTO createPage(String userId, String pageType);
+    CreatePageDTO createPage(String userId, String pageType) throws IOException;
 
     GetPageListDTO getPageTitleList(String userId);
 

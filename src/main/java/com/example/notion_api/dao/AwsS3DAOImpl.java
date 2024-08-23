@@ -8,12 +8,14 @@ import com.example.notion_api.dto.s3.S3FileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.stereotype.Repository;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class AwsS3DAOImpl implements AwsS3DAO{
 
     @Value("${aws.s3.credentials.bucket-name}")

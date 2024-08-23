@@ -2,3 +2,4 @@
 .idea
 application-aws.properties
 target
+*.class
