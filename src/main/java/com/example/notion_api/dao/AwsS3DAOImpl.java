@@ -1,9 +1,7 @@
 package com.example.notion_api.dao;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.*;
 import com.example.notion_api.dto.s3.S3FileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,41 +74,59 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     @Override
     public List<String> getFileNames(String remotePath, String prefix) {
         List<String> fileNames = new ArrayList<>();
-        File directory = new File(remotePath+"/");
-        if (directory.exists() && directory.isDirectory()){
-            File[] files = directory.listFiles();
+        ListObjectsV2Request request = new ListObjectsV2Request()
+                .withBucketName(bucketName)
+                .withPrefix(prefix);
+        ListObjectsV2Result result;
 
-            if (files != null){
-                for (File file : files){
-                    if(file.isFile() && file.getName().startsWith(prefix)){
-                        fileNames.add(file.getName());
-                    }
+        do {
+            result = amazonS3.listObjectsV2(request);
+            for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
+                String fileName = objectSummary.getKey();
+                if (!fileName.endsWith("/")) {
+                    fileNames.add(fileName);
                 }
             }
-        }
+            request.setContinuationToken(result.getNextContinuationToken());
+        } while (result.isTruncated());
         return fileNames;
     }
 
     @Override
     public void updateStringAsFile(String remotePath, String fileName, String content) throws IOException {
-        File file = new File(remotePath, fileName);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-        writer.write(content);
+        byte[] contentAsBytes = content.getBytes();
+        InputStream inputStream = new ByteArrayInputStream(contentAsBytes);
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(contentAsBytes.length);
+
+        amazonS3.putObject(bucketName, fileName, inputStream, metadata);
     }
 
     @Override
     public S3FileDTO getFileNameAndContent(String remotePath, String prefix) throws IOException {
-        File directory = new File(remotePath);
-        if (directory.exists() && directory.isDirectory()){
-            File[] files = directory.listFiles();
-            if (files != null){
-                for (File file : files){
-                    if (file.isFile() && file.getName().startsWith(prefix)){
-                        String content = new String(Files.readAllBytes(file.toPath()));
-                        return new S3FileDTO(file.getName(),content);
-                    }
-                }
+        ListObjectsV2Request request = new ListObjectsV2Request()
+                .withBucketName(bucketName)
+                .withPrefix(prefix)
+                .withMaxKeys(1);
+
+        ListObjectsV2Result result = amazonS3.listObjectsV2(request);
+        List<S3ObjectSummary> objects = result.getObjectSummaries();
+
+        if (!objects.isEmpty()) {
+            String fileName = objects.get(0).getKey();
+
+            S3Object s3Object = amazonS3.getObject(bucketName, fileName);
+            S3ObjectInputStream inputStream = s3Object.getObjectContent();
+
+            StringBuilder contentBuilder = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                contentBuilder.append(line).append("\n");
             }
+            String content = contentBuilder.toString();
+
+            return new S3FileDTO(fileName, content);
         }
         return null;
     }
