@@ -100,8 +100,12 @@ public class PageServiceImpl implements PageService{
         }
     }
 
+    /**
+     * 로그인 시 모든 페이지의 업데이트 날짜를 비교하여, 서버와 로컬의 페이지를 업데이트시킨다.
+     * */
     @Override
     public List<PageDTO> getUpdatedPageByLogin(String userId, List<PageDTO> pageDTOs) {
+
         return List.of();
     }
 
