@@ -15,7 +15,9 @@ public interface PageService {
 
     PageDTO getPage(String userId,PageDTO pageDTO) throws IOException;
 
-    List<PageDTO> getUpdatedPage(String userId, List<PageDTO> pageDTOs) throws IOException;
+    List<PageDTO> getUpdatedPageByLogin(String userId, List<PageDTO> pageDTOs);
+
+    List<PageDTO> getUpdatedPageByTimer(String userId, List<PageDTO> pageDTOs);
 
     void deletePage(String userId, String pageId);
 
