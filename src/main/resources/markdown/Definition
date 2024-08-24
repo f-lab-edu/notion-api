@@ -10,9 +10,9 @@ content 종류별
 제목1 : <n-content type="title1", text=""/>
 제목2 : <n-content type="title2", text=""/>
 제목3 : <n-content type="title3", text=""/>
-페이지 :
+페이지 : <n-content type="page", text=""></n-content>
 할 일 목록 : <n-content type="todo", state="unchecked", hint="할 일"></n-content>
-            (state는 할 일 목록 요소의 체크, 언체크를 의미)
+          (state는 할 일 목록 요소의 체크, 언체크를 의미)
 
 글머리 기호 목록 : <n-content type="list", text=""/>
 번호 매기기 목록 : <n-content type="orderlist", order="1"/>
@@ -53,7 +53,7 @@ URL : URL
 버튼 : button
 
 
- - 글꼴 여러개 적용시
+- 글꼴 여러개 적용시
 
- <n-content font="bold&italic&line"></n-content>
-                  볼드체, 이탤릭체, 밑줄체
+<n-content font="bold&italic&line"></n-content>
+                볼드체, 이탤릭체, 밑줄체

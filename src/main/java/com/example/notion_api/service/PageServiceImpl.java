@@ -6,6 +6,7 @@ import com.example.notion_api.dto.pages.PageIdTitleDTO;
 import com.example.notion_api.dto.pages.PageIdTitleListDTO;
 import com.example.notion_api.dto.pages.PageDTO;
 import com.example.notion_api.dto.s3.S3FileDTO;
+import com.example.notion_api.markdown.InitialTemplate;
 import com.example.notion_api.util.DateTimeUtil;
 import com.example.notion_api.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,6 +95,7 @@ public class PageServiceImpl implements PageService{
      * 로그인 또는 특정 시간을 구분하는 서비스 로직을 UserService에서 처리한다.
      * */
     // TODO : 리팩토링 하기.
+
     @Override
     public List<PageDTO> getUpdatedPage(String userId, List<PageDTO> pageDTOs) throws IOException {
         List<String> s3StorageFileNames = awsS3DAO.getFileNames(userId,userId);
@@ -158,8 +160,30 @@ public class PageServiceImpl implements PageService{
     }
 
     @Override
-    public List<PageDTO> createTemplatePages(String userId) {
-        return List.of();
+    public List<PageDTO> createTemplatePages(String userId) throws IOException {
+        Long pageId1 = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        String title1 = "모바일에서 시작하기";
+        String icon1 = "no-icon";
+        String coverImage1 = "no-coverImage";
+        String datetime1 = DateTimeUtil.formatLocalDateTimeToString(LocalDateTime.now());
+        String fileName1 = getFileName(pageId1,userId,title1,icon1,coverImage1,datetime1);
+        String content1 = PageUtil.getPageContent(InitialTemplate.INITIAL_TEMPLATE1);
+        PageDTO page1 = new PageDTO(pageId1, title1, icon1, coverImage1, DateTimeUtil.StringToLocalDateTime(datetime1), fileName1);
+
+
+        Long pageId2 = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        String title2 = "모바일에서 시작하기";
+        String icon2 = "no-icon";
+        String coverImage2 = "no-coverImage";
+        String datetime2 = DateTimeUtil.formatLocalDateTimeToString(LocalDateTime.now());
+        String fileName2 = getFileName(pageId2,userId,title2,icon2,coverImage2,datetime2);
+        String content2 = PageUtil.getPageContent(InitialTemplate.INITIAL_TEMPLATE2);
+        PageDTO page2 = new PageDTO(pageId2, title2, icon2, coverImage2, DateTimeUtil.StringToLocalDateTime(datetime2), fileName2);
+
+        awsS3DAO.uploadStringAsFile(userId,fileName1,content1);
+        awsS3DAO.uploadStringAsFile(userId,fileName2,content2);
+
+        return List.of(page1,page2);
     }
 
     @Override
