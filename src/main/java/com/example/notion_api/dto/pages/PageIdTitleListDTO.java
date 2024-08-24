@@ -1,16 +1,16 @@
 package com.example.notion_api.dto.pages;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import lombok.*;
 
 import java.util.List;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Builder
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class PageIdTitleListDTO {
     private List<PageIdTitleDTO> pageIdTitleDTOs;
 }
