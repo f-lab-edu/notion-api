@@ -17,7 +17,7 @@ public class PageDTO {
     private String title;
     private String icon;
     private String coverImage;
-    @DateTimeFormat(pattern = "dd.MM.yy HH:mm:ss")
+    @DateTimeFormat(pattern = "yy.MM.dd HH:mm:ss")
     private LocalDateTime updatedDate;
     private String content;
 }
