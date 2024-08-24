@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DeletepageDTO {
+public class TeamWorkspaceDeletepageDTO {
     private String userId;
     private Long teamspaceId;
     private Long pageId;

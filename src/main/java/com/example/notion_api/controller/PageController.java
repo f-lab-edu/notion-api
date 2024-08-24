@@ -1,20 +1,43 @@
 package com.example.notion_api.controller;
 
+import com.example.notion_api.dto.pages.RequestDeletePageDTO;
+import com.example.notion_api.dto.pages.PageDTO;
+import com.example.notion_api.dto.pages.RequestUpdatePageDTO;
+import com.example.notion_api.dto.pages.RequestUpdatePageListDTO;
+import com.example.notion_api.service.PageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/api")
 public class PageController {
+
+    private final PageServiceImpl pageService;
+
+    @Autowired
+    public PageController(PageServiceImpl pageService) {
+        this.pageService = pageService;
+    }
+
+    /*
+     * TODO : 인터셉터, exception handler 작성하기.
+     *        response 작성하기.
+     * */
 
     /**
      * 페이지 생성
      * */
     @PostMapping("/page")
     public void createPage(
+        @RequestParam("user_id") String userId,
+        @RequestParam("page_type") String pageType
+    ) throws IOException {
 
-    ){
-
+        pageService.createPage(userId, pageType);
     }
 
     /**
@@ -22,9 +45,9 @@ public class PageController {
      * */
     @GetMapping("/page/titles")
     public void getPagesList(
-
+        @RequestParam("user_id") String userId
     ){
-
+        pageService.getPageTitleList(userId);
     }
 
     /**
@@ -32,9 +55,12 @@ public class PageController {
      * */
     @PostMapping("/page/view")
     public void getPage(
+            @RequestBody RequestUpdatePageDTO request
+    ) throws IOException {
+        String userId = request.getUserId();
+        PageDTO pageDTOs = request.getPageDTO();
 
-    ){
-
+        pageService.getPage(userId, pageDTOs);
     }
 
     /**
@@ -42,9 +68,12 @@ public class PageController {
      * */
     @PutMapping("/pages/event-login")
     public void pageUpdateWhenLogin(
+            @RequestBody RequestUpdatePageListDTO request
+    ) throws IOException {
+        String userId = request.getUserId();
+        List<PageDTO> pageDTOs = request.getPageDTOs();
 
-    ){
-
+        pageService.getUpdatedPage(userId, pageDTOs);
     }
 
     /**
@@ -52,9 +81,12 @@ public class PageController {
      * */
     @PutMapping("/pages/event-timeout")
     public void pageUpdateWhenTimeout(
+            @RequestBody RequestUpdatePageListDTO request
+    ) throws IOException {
+        String userId = request.getUserId();
+        List<PageDTO> pageDTOs = request.getPageDTOs();
 
-    ){
-
+        pageService.getUpdatedPage(userId, pageDTOs);
     }
 
     /**
@@ -62,9 +94,11 @@ public class PageController {
      * */
     @DeleteMapping("/page")
     public void pageDelete(
-
+            @RequestBody RequestDeletePageDTO request
     ){
-
+        String userId = request.getUserId();
+        String pageId = request.getPageId();
+        pageService.deletePage(userId, pageId);
     }
 
     /**
@@ -72,18 +106,8 @@ public class PageController {
      * */
     @PostMapping("/pages/template")
     public void createTemplate(
-
-    ){
-
-    }
-
-    /**
-     * 버전별 페이지 가져오기
-     * */
-    @GetMapping("/pages/version-check")
-    public void getPagesWithVersions(
-
-    ){
-
+        @RequestParam("user_id") String uesrId
+    ) throws IOException {
+        pageService.createTemplatePages(uesrId);
     }
 }

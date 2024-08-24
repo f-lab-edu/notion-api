@@ -186,11 +186,6 @@ public class PageServiceImpl implements PageService{
         return List.of(page1,page2);
     }
 
-    @Override
-    public List<PageDTO> getPagesByVersion(String userId, String pageId) {
-        return List.of();
-    }
-
     private String getFileName(Object pageId, String userId, String title,
                                String icon, String coverImage, Object updateDate){
         return new StringBuilder()

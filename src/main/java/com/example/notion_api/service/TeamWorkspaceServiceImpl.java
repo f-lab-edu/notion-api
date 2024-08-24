@@ -19,7 +19,7 @@ public class TeamWorkspaceServiceImpl implements TeamWorkspaceService{
     }
 
     @Override
-    public String deletePagesInTeamWorkspace(DeletepageDTO deletepageDTO) {
+    public String deletePagesInTeamWorkspace(TeamWorkspaceDeletepageDTO teamWorkspaceDeletepageDTO) {
         return "";
     }
 

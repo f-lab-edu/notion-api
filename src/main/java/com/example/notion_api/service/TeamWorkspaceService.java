@@ -2,8 +2,6 @@ package com.example.notion_api.service;
 
 import com.example.notion_api.dto.teamspace.*;
 
-import java.util.List;
-
 public interface TeamWorkspaceService {
 
     TeamWorkspaceDTO createTeamWorkspace(TeamWorkspaceDTO teamWorkspaceDTO);
@@ -12,7 +10,7 @@ public interface TeamWorkspaceService {
 
     TeamWorkspacePagesDTO updatePagesInTeamWorkspace(String userId, TeamWorkspacePagesDTO teamWorkspacePagesDTO);
 
-    String deletePagesInTeamWorkspace(DeletepageDTO deletepageDTO);
+    String deletePagesInTeamWorkspace(TeamWorkspaceDeletepageDTO teamWorkspaceDeletepageDTO);
 
     TeamWorkspacePagesDTO createTemplateInTeamWorkspace(Long teamspaceId);
 
