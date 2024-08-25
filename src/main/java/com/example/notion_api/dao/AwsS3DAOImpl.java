@@ -21,6 +21,7 @@ public class AwsS3DAOImpl implements AwsS3DAO{
 
     private final AmazonS3 amazonS3;
 
+
     @Autowired
     public AwsS3DAOImpl(AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
@@ -101,7 +102,8 @@ public class AwsS3DAOImpl implements AwsS3DAO{
             for (S3ObjectSummary objectSummary : result.getObjectSummaries()) {
                 String fileName = objectSummary.getKey();
                 if (!fileName.endsWith("/")) {
-                    fileNames.add(fileName);
+                    String tempFileName = fileName.split("/")[1];
+                    fileNames.add(tempFileName);
                 }
             }
             request.setContinuationToken(result.getNextContinuationToken());
@@ -141,7 +143,7 @@ public class AwsS3DAOImpl implements AwsS3DAO{
     public S3FileDTO getFileNameAndContent(String remotePath, String prefix) throws IOException {
         ListObjectsV2Request request = new ListObjectsV2Request()
                 .withBucketName(bucketName)
-                .withPrefix(prefix)
+                .withPrefix(remotePath+"/"+prefix)
                 .withMaxKeys(1);
 
         ListObjectsV2Result result = amazonS3.listObjectsV2(request);
@@ -161,7 +163,8 @@ public class AwsS3DAOImpl implements AwsS3DAO{
             }
             String content = contentBuilder.toString();
 
-            return new S3FileDTO(fileName, content);
+            String tempFileName = fileName.split("/")[1];
+            return new S3FileDTO(tempFileName, content);
         }
         return null;
     }

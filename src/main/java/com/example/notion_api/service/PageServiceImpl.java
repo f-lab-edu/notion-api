@@ -21,6 +21,7 @@ public class PageServiceImpl implements PageService{
 
     private final AwsS3DAOImpl awsS3DAO;
 
+    private String parser = "#";
     @Autowired
     public PageServiceImpl(AwsS3DAOImpl awsS3DAO) {
         this.awsS3DAO = awsS3DAO;
@@ -31,7 +32,7 @@ public class PageServiceImpl implements PageService{
         Long pageId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
         String title = "no-title";
         String icon = "no-icon";
-        String coverImage = "no-coverImage";
+        String coverImage = "no-coverimage";
         String datetime = DateTimeUtil.formatLocalDateTimeToString(LocalDateTime.now());
 
         String fileName = getFileName(pageId,userId,title,icon,coverImage,datetime);
@@ -48,7 +49,7 @@ public class PageServiceImpl implements PageService{
         List<String> fileNames = awsS3DAO.getFileNames(userId,userId);
         List<PageIdTitleDTO> pageIdTitleDTOList = new ArrayList<>();
         for (String fileName : fileNames){
-            String[] parts = fileName.split("_");
+            String[] parts = fileName.split(parser);
             String pageId = parts[0];
             String title = parts[2];
             PageIdTitleDTO pageIdTitleDTO = new PageIdTitleDTO(pageId,title);
@@ -64,11 +65,11 @@ public class PageServiceImpl implements PageService{
     @Override
     public PageDTO getPage(String userId, PageDTO pageDTO) throws IOException {
         String prefix = new StringBuilder()
-                                .append(pageDTO.getPageId()).append("_")
-                                .append(userId).toString();
+                                .append(pageDTO.getPageId()).append(parser)
+                                .append(userId).append(parser).toString();
         S3FileDTO s3FileDTO = awsS3DAO.getFileNameAndContent(userId,prefix);
-        String[] fileNameParts = s3FileDTO.getFileName().split("_");
-        LocalDateTime s3UpdatedDate = LocalDateTime.parse(fileNameParts[5]);
+        String[] fileNameParts = s3FileDTO.getFileName().split(parser);
+        LocalDateTime s3UpdatedDate = LocalDateTime.parse(fileNameParts[5],DateTimeUtil.formatter);
 
         if (s3UpdatedDate.isAfter(pageDTO.getUpdatedDate())){
             return new PageDTO(
@@ -108,7 +109,7 @@ public class PageServiceImpl implements PageService{
         // s3 저장소의 페이지의 날짜값을 담아옴
         Map<Long, LocalDateTime> s3UpdatedDatesMap = new HashMap<>();
         for (String fileName : s3StorageFileNames){
-            String[] parts = fileName.split("_");
+            String[] parts = fileName.split(parser);
             Long pageId = Long.parseLong(parts[0]);
             LocalDateTime s3UpdatedDate = DateTimeUtil.StringToLocalDateTime(parts[5]);
             s3UpdatedDatesMap.put(pageId, s3UpdatedDate);
@@ -126,10 +127,10 @@ public class PageServiceImpl implements PageService{
             if (s3UpdatedDate.isAfter(localDateTime)){
                 // s3의 파일이 최신인 경우, 클라이언트에 업데이트시킬 페이지 추가
                 String prefix = new StringBuilder()
-                        .append(pageDTO.getPageId()).append("_")
+                        .append(pageDTO.getPageId()).append(parser)
                         .append(userId).toString();
                 S3FileDTO s3FileDTO = awsS3DAO.getFileNameAndContent(userId,prefix);
-                String[] tempS3FileNameParts = s3FileDTO.getFileName().split("_");
+                String[] tempS3FileNameParts = s3FileDTO.getFileName().split(parser);
                 PageDTO tempPageDTO = new PageDTO(
                         pageId,
                         tempS3FileNameParts[2],
@@ -164,7 +165,7 @@ public class PageServiceImpl implements PageService{
         Long pageId1 = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
         String title1 = "모바일에서 시작하기";
         String icon1 = "no-icon";
-        String coverImage1 = "no-coverImage";
+        String coverImage1 = "no-coverimage";
         String datetime1 = DateTimeUtil.formatLocalDateTimeToString(LocalDateTime.now());
         String fileName1 = getFileName(pageId1,userId,title1,icon1,coverImage1,datetime1);
         String content1 = PageUtil.getPageContent(InitialTemplate.INITIAL_TEMPLATE1);
@@ -174,7 +175,7 @@ public class PageServiceImpl implements PageService{
         Long pageId2 = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
         String title2 = "모바일에서 시작하기";
         String icon2 = "no-icon";
-        String coverImage2 = "no-coverImage";
+        String coverImage2 = "no-coverimage";
         String datetime2 = DateTimeUtil.formatLocalDateTimeToString(LocalDateTime.now());
         String fileName2 = getFileName(pageId2,userId,title2,icon2,coverImage2,datetime2);
         String content2 = PageUtil.getPageContent(InitialTemplate.INITIAL_TEMPLATE2);
@@ -189,11 +190,11 @@ public class PageServiceImpl implements PageService{
     private String getFileName(Object pageId, String userId, String title,
                                String icon, String coverImage, Object updateDate){
         return new StringBuilder()
-                        .append(pageId).append("_")
-                        .append(userId).append("_")
-                        .append(title).append("_")
-                        .append(icon).append("_")
-                        .append(coverImage).append("_")
+                        .append(pageId).append(parser)
+                        .append(userId).append(parser)
+                        .append(title).append(parser)
+                        .append(icon).append(parser)
+                        .append(coverImage).append(parser)
                         .append(updateDate).toString();
     }
 }

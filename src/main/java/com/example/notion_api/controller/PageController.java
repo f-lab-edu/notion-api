@@ -127,10 +127,12 @@ public class PageController {
      * */
     @DeleteMapping("/page")
     public ResponseEntity<Api<Void>> pageDelete(
-            @RequestBody RequestDeletePageDTO request
+//            @RequestBody RequestDeletePageDTO request
+            @RequestParam("user_id")String userId,
+            @RequestParam("page_id")String pageId
     ){
-        String userId = request.getUserId();
-        String pageId = request.getPageId();
+//        String userId = request.getUserId();
+//        String pageId = request.getPageId();
         pageService.deletePage(userId, pageId);
 
         Api<Void> response = Api.<Void>builder()
