@@ -1,5 +1,6 @@
 package com.example.notion_api.config;
 
+import com.example.notion_api.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,6 +12,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final CustomOAuth2UserService customOAuth2UserService;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+        this.customOAuth2UserService = customOAuth2UserService;
+    }
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
@@ -25,7 +33,9 @@ public class SecurityConfig {
         httpSecurity.httpBasic((auth) -> auth.disable());
 
         // oauth2(디폴트 설정)
-        httpSecurity.oauth2Login(Customizer.withDefaults());
+        httpSecurity.oauth2Login((oauth2) -> oauth2
+                .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
+                        .userService(customOAuth2UserService))));
 
         // 경로별 인가 작업
         httpSecurity.authorizeHttpRequests((auth) -> auth
