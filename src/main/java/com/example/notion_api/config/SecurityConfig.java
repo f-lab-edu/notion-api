@@ -1,5 +1,8 @@
 package com.example.notion_api.config;
 
+import com.example.notion_api.jwt.JwtFilter;
+import com.example.notion_api.jwt.JwtUtil;
+import com.example.notion_api.oauth2.CustomSuccessHandler;
 import com.example.notion_api.service.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -15,8 +19,13 @@ public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService) {
+    private final CustomSuccessHandler customSuccessHandler;
+    private final JwtUtil jwtUtil;
+
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JwtUtil jwtUtil) {
         this.customOAuth2UserService = customOAuth2UserService;
+        this.customSuccessHandler = customSuccessHandler;
+        this.jwtUtil = jwtUtil;
     }
 
 
@@ -32,10 +41,18 @@ public class SecurityConfig {
         // HTTP Basic 인증 방식 비활성화
         httpSecurity.httpBasic((auth) -> auth.disable());
 
+        //JWTFilter 추가
+        httpSecurity
+                .addFilterBefore(new JwtFilter(jwtUtil),
+                        UsernamePasswordAuthenticationFilter.class);
+
+
         // oauth2(디폴트 설정)
         httpSecurity.oauth2Login((oauth2) -> oauth2
                 .userInfoEndpoint((userInfoEndpointConfig -> userInfoEndpointConfig
-                        .userService(customOAuth2UserService))));
+                        .userService(customOAuth2UserService)))
+                .successHandler(customSuccessHandler)
+        );
 
         // 경로별 인가 작업
         httpSecurity.authorizeHttpRequests((auth) -> auth
