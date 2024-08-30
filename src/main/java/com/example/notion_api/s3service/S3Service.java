@@ -1,5 +1,6 @@
 package com.example.notion_api.s3service;
 
+import com.example.notion_api.config.AwsS3Config;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,17 +32,17 @@ import java.util.stream.Collectors;
 @Service
 public class S3Service {
 
-    private final S3Client s3Client;
+    private final AwsS3Config awsS3Config;
 
     Logger logger = Logger.getLogger("S3Service");
 
     @Value("${aws.s3.credentials.bucket-name}")
     private String bucketName;
 
-    @Autowired
-    public S3Service(S3Client s3Client) {
-        this.s3Client = s3Client;
+    public S3Service(AwsS3Config awsS3Config) {
+        this.awsS3Config = awsS3Config;
     }
+
 
     /** 파일(이미지, 동영상, 오디오) 파일 업로드 */
     public void uploadFile(MultipartFile multipartFile) throws IOException {
@@ -56,7 +57,7 @@ public class S3Service {
                 .build();
 
         // 파일을 바이트 배열로 읽어서 업로드
-        s3Client.putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
+        awsS3Config.s3Client().putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
     }
 
     /*
@@ -92,7 +93,7 @@ public class S3Service {
                 .key(objectPath)
                 .build();
 
-        s3Client.deleteObject(deleteObjectRequest);
+        awsS3Config.s3Client().deleteObject(deleteObjectRequest);
     }
 
     /** 오브젝트 목록 가져오기 */
@@ -103,7 +104,7 @@ public class S3Service {
 //                .maxKeys(5)
                 .build();
 
-        ListObjectsV2Response listObjectsV2Response = s3Client.listObjectsV2(listObjectsV2Request);
+        ListObjectsV2Response listObjectsV2Response = awsS3Config.s3Client().listObjectsV2(listObjectsV2Request);
 
         for (S3Object s3Object : listObjectsV2Response.contents()){
             objKey.add(s3Object.key().toString());
@@ -118,7 +119,7 @@ public class S3Service {
                 .bucket(bucketName)
                 .build();
 
-        ListObjectsV2Response listObjectsV2Response = s3Client.listObjectsV2(listObjectsV2Request);
+        ListObjectsV2Response listObjectsV2Response = awsS3Config.s3Client().listObjectsV2(listObjectsV2Request);
 
         ZoneId zoneId = ZoneId.systemDefault();
 
@@ -145,7 +146,7 @@ public class S3Service {
                 .build();
 
         // UTF-8로 인코딩된 바이트 데이터를 RequestBody로 변환하여 객체 업로드
-        s3Client.putObject(putObjectRequest, RequestBody.fromBytes(utf8Bytes));
+        awsS3Config.s3Client().putObject(putObjectRequest, RequestBody.fromBytes(utf8Bytes));
     }
 
     /** 오브젝트를 문자열 데이터로 읽어오기 */
@@ -157,7 +158,7 @@ public class S3Service {
                 .build();
 
         // S3에서 객체 가져오기 (객체 데이터와 메타데이터를 포함한 응답)
-        ResponseInputStream<GetObjectResponse> s3ObjectResponse = s3Client.getObject(getObjectRequest);
+        ResponseInputStream<GetObjectResponse> s3ObjectResponse = awsS3Config.s3Client().getObject(getObjectRequest);
 
         // 오브젝트의 메타데이터 가져오기
         GetObjectResponse response = s3ObjectResponse.response();
