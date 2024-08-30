@@ -1,2 +1,0 @@
-<n-title font="bold",sort="left",hint="제목없음",text=""/>
-<n-calender title="캘린더 보기", date="{todaydate}"/>
