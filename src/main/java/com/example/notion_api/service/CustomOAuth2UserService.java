@@ -1,7 +1,9 @@
 package com.example.notion_api.service;
 
+import com.example.notion_api.dto.oauth.CustomOAuth2User;
 import com.example.notion_api.dto.oauth.GoogleResponse;
 import com.example.notion_api.dto.oauth.OAuth2Response;
+import com.example.notion_api.dto.oauth.UserDTO;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
@@ -24,6 +26,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (registrationId.equals("google")){
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
         }
-        return null;
+
+        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setUsername(username);
+        userDTO.setName(oAuth2Response.getName());
+        userDTO.setRole("ROLE_USER");
+        return new CustomOAuth2User(userDTO);
     }
 }
