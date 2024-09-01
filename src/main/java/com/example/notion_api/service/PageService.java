@@ -35,6 +35,7 @@ public class PageService {
         if (pageType.equals("default")){
             UUID uuid = UUID.randomUUID();
             PageDTO pageDTO = PageDTO.builder()
+                    .id(uuid.toString())
                     .title("no-title")
                     .lastUpdated(LocalDateTime.now())
                     .contents(null)
@@ -43,7 +44,7 @@ public class PageService {
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
             String jsonString = objectMapper.writeValueAsString(pageDTO);
-            s3Service.writeObjectContent("user/"+userId+"/"+key, jsonString);
+            s3Service.writeObjectContent("user/"+userId+"/page/"+key, jsonString);
             return pageDTO;
         }else {
             throw new InvalidPageTypeException(pageType);
@@ -65,15 +66,14 @@ public class PageService {
     public void uploadPageTemplate(String userId, PageDTO pageDTO) throws IOException {
 
         // 페이지의 전체적인 포맷을 나타내는 json 데이터를 문자열 객체로 변환하여 하나의 파일로 저장.
-        UUID uuid = UUID.randomUUID();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String jsonString = objectMapper.writeValueAsString(pageDTO);
         String title = pageDTO.getTitle();
-        s3Service.writeObjectContent("user/"+userId+"/page/"+uuid+"_"+title,jsonString);
+        s3Service.writeObjectContent("user/"+userId+"/page/"+pageDTO.getId()+"_"+title,jsonString);
     }
 
-    public PageMultipartUrlDTO uploadPageMultipartFile(String userId, PageMultipartDTO pageMultipartDTO) throws IOException {
+    public PageMultipartUrlDTO uploadPageMultipartFile(String userId, String id, PageMultipartDTO pageMultipartDTO) throws IOException {
         /**
          *  multipartFile 객체가 null 이면 아무 작업도 하지 않음.
          *  파일을 읽어올 때에만 null 인지 확인하고 null이 아니면 파일을 처리함.
@@ -84,8 +84,8 @@ public class PageService {
         PageMultipartUrlDTO pageMultipartUrlDTO = new PageMultipartUrlDTO();
         if (pageMultipartDTO.getIcon() != null){
             // 경로에 오브젝트 저장
-            UUID uuid = UUID.randomUUID();
-            iconKeyName = "user/"+userId+"/icon/"+uuid+"_"+pageMultipartDTO.getIcon().getOriginalFilename();
+
+            iconKeyName = "user/"+userId+"/icon/"+id+"_"+pageMultipartDTO.getIcon().getOriginalFilename();
             s3Service.uploadFileWithKeyname(pageMultipartDTO.getIcon(),iconKeyName);
 
             // 저장된 오브젝트(MultipartFile)를 Url로 다운로드
@@ -93,8 +93,7 @@ public class PageService {
         }
         // /userId/background/ 하위 경로에 'uuid_[배경 이미지 이름]'으로 저장
         if (pageMultipartDTO.getBackgroundImage() != null){
-            UUID uuid = UUID.randomUUID();
-            backgroundImageKeyName = "user/"+userId+"/background/"+uuid+"_"+pageMultipartDTO.getBackgroundImage().getOriginalFilename();
+            backgroundImageKeyName = "user/"+userId+"/background/"+id+"_"+pageMultipartDTO.getBackgroundImage().getOriginalFilename();
             s3Service.uploadFileWithKeyname(pageMultipartDTO.getBackgroundImage(),backgroundImageKeyName);
 
             pageMultipartUrlDTO.setBackgroundImageUrl(s3Service.downloadFileAsURL(backgroundImageKeyName));
@@ -108,9 +107,8 @@ public class PageService {
 
             for (MultipartFile contentFile : pageMultipartDTO.getContentFileList()) {
                 if (contentFile != null) {
-                    UUID uuid = UUID.randomUUID();
                     String contentKeyName = "user/"+userId+"/content";
-                    String fileName = uuid+"_"+contentFile.getOriginalFilename();
+                    String fileName = id+"_"+contentFile.getOriginalFilename();
                     s3Service.uploadFileByPathFileName(contentFile, fileName, contentKeyName);
                     pageMultipartUrlDTO.getContentUrlList().add(s3Service.downloadFileAsURL(contentKeyName+"/"+fileName));
                 }

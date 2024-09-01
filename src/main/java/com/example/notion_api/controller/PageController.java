@@ -82,7 +82,7 @@ public class PageController {
                                                     .build();
 
             pageService.uploadPageTemplate(userId,pageDTO);
-            PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId, pageMultipartDTO);
+            PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getId(),pageMultipartDTO);
             PageResponseDTO pageResponseDTO = new PageResponseDTO().builder()
                     .pageDTO(pageDTO)
                     .pageMultipartUrlDTO(pageMultipartUrlDTO)
@@ -181,10 +181,10 @@ public class PageController {
                         .build();
 
                 pageService.uploadPageTemplate(userId,pageDTO);
-                pageService.uploadPageMultipartFile(userId,pageMultipartDTO);
+                pageService.uploadPageMultipartFile(userId,pageDTO.getId(),pageMultipartDTO);
 
                 pageService.uploadPageTemplate(userId,pageDTO);
-                PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId, pageMultipartDTO);
+                PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getId(),pageMultipartDTO);
                 PageResponseDTO pageResponseDTO = new PageResponseDTO().builder()
                         .pageDTO(pageDTO)
                         .pageMultipartUrlDTO(pageMultipartUrlDTO)
