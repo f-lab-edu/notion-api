@@ -60,17 +60,60 @@ public class S3Service {
         awsS3Config.s3Client().putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
     }
 
+    public void uploadFileWithKeyname(MultipartFile multipartFile, String keyName) throws IOException {
+        // 오브젝트 키는 인코딩하지 않고 원본 파일 이름을 그대로 사용
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)  // 원본 키 사용
+                .contentType(multipartFile.getContentType())
+                .contentLength(multipartFile.getSize())
+                .build();
+
+        // 파일을 바이트 배열로 읽어서 업로드
+        awsS3Config.s3Client().putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
+    }
+
+    /** 경로를 설정하여 파일을 업로드*/
+    public void uploadFileByPath(MultipartFile multipartFile, String filePath) throws IOException {
+        // 오브젝트 키는 인코딩하지 않고 원본 파일 이름을 그대로 사용
+        String originalKey = multipartFile.getOriginalFilename();
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(filePath+"/"+originalKey)  // 원본 키 사용
+                .contentType(multipartFile.getContentType())
+                .contentLength(multipartFile.getSize())
+                .build();
+
+        // 파일을 바이트 배열로 읽어서 업로드
+        awsS3Config.s3Client().putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
+    }
+    public void uploadFileByPathFileName(MultipartFile multipartFile,String fileName, String filePath) throws IOException {
+        // 오브젝트 키는 인코딩하지 않고 원본 파일 이름을 그대로 사용
+
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(filePath+"/"+fileName)  // 원본 키 사용
+                .contentType(multipartFile.getContentType())
+                .contentLength(multipartFile.getSize())
+                .build();
+
+        // 파일을 바이트 배열로 읽어서 업로드
+        awsS3Config.s3Client().putObject(putObjectRequest, RequestBody.fromBytes(multipartFile.getBytes()));
+    }
+
     /*
     *   TODO : 파일명이 한글일 떄 읽어오는 경우, 발생하는 에러 해결하기.
     * */
     /** 파일(이미지, 동영상, 오디오)를 URL로 다운로드 */
-    public String downloadFile(String fileName) throws IOException {
+    public String downloadFileAsURL(String keyName) throws IOException {
         // S3Presigner 생성
         try (S3Presigner presigner = S3Presigner.create()) {
             // S3에서 객체 가져오기 요청 생성
             GetObjectRequest objectRequest = GetObjectRequest.builder()
                     .bucket(bucketName)
-                    .key(fileName)  // 원본 키 사용
+                    .key(keyName)  // 원본 키 사용
                     .build();
 
             // presigned URL 요청 설정
@@ -188,7 +231,7 @@ public class S3Service {
 
         for (Map.Entry<String, MultipartFile> entry : multipartFileMap.entrySet()){
             String fileName = entry.getKey();
-            downloadUrl.add(downloadFile(fileName));
+            downloadUrl.add(downloadFileAsURL(fileName));
         }
 
         return downloadUrl;
@@ -198,7 +241,7 @@ public class S3Service {
     public List<String> downloadFileList(List<String> fileNameList) throws IOException {
         List<String> urlList = new ArrayList<>();
         for (String fileName : fileNameList){
-            urlList.add(downloadFile(fileName));
+            urlList.add(downloadFileAsURL(fileName));
         }
         return urlList;
     }
