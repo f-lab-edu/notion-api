@@ -22,9 +22,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -129,6 +127,8 @@ public class S3Service {
         }
     }
 
+
+
     /** 오브젝트 삭제 */
     public void deleteObject(String objectPath) {
         DeleteObjectRequest deleteObjectRequest = DeleteObjectRequest.builder()
@@ -219,6 +219,46 @@ public class S3Service {
         return content;
     }
 
+    public String readObjectContentFromPath(String prefix, String nameContains) throws IOException {
+        List<String> objectKeys = new ArrayList<>();
+
+        String continuationToken = null;
+
+        do {
+            ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .continuationToken(continuationToken)
+                    .build();
+
+            ListObjectsV2Response listObjectsResponse = awsS3Config.s3Client().listObjectsV2(listObjectsRequest);
+
+            objectKeys.addAll(listObjectsResponse.contents().stream()
+                    .map(S3Object::key)
+                    .filter(key -> key.contains(nameContains))
+                    .collect(Collectors.toList()));
+
+            continuationToken = listObjectsResponse.nextContinuationToken();
+        } while (continuationToken != null);
+
+        // 첫 번째 객체 키를 가져와서 그 객체의 내용을 읽어옵니다.
+        String objectKey = objectKeys.get(0);
+
+        // S3에서 객체 가져오기 요청 생성
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectKey)
+                .build();
+
+        // S3에서 객체 가져오기 (객체 데이터와 메타데이터를 포함한 응답)
+        try (ResponseInputStream<GetObjectResponse> s3ObjectResponse = awsS3Config.s3Client().getObject(getObjectRequest)) {
+            // InputStream을 문자열로 변환
+            return new BufferedReader(new InputStreamReader(s3ObjectResponse, StandardCharsets.UTF_8))
+                    .lines()
+                    .collect(Collectors.joining("\n"));
+        }
+    }
+
     /** 여러개의 파일(이미지, 동영상, 오디오) 파일 업로드 및 Url 가져오기 */
     public List<String> uploadFileList(Map<String,MultipartFile> multipartFileMap) throws IOException {
 
@@ -254,5 +294,184 @@ public class S3Service {
      *         3. AWS S3의 파일별 버전을 비교하는 방식.
      * */
 
+    public List<String> getObjectListByPath(String prefix) {
+        List<S3Object> s3Objects = new ArrayList<>();
+        String continuationToken = null;
+
+        do {
+            // S3에서 객체를 가져오는 요청 생성
+            ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .continuationToken(continuationToken)
+                    .build();
+
+            // 요청을 실행하여 응답을 받음
+            ListObjectsV2Response listObjectsResponse = awsS3Config.s3Client().listObjectsV2(listObjectsRequest);
+
+            // 응답에서 S3 오브젝트의 이름을 리스트에 추가
+            s3Objects.addAll(listObjectsResponse.contents());
+
+            // 다음 페이지가 있는지 확인하고 ContinuationToken 설정
+            continuationToken = listObjectsResponse.nextContinuationToken();
+        } while (continuationToken != null); // 다음 페이지가 존재하면 계속 반복
+
+        // 오브젝트를 생성 날짜(수정 날짜) 순으로 정렬
+        s3Objects.sort(Comparator.comparing(S3Object::lastModified));
+
+        // 정렬된 오브젝트의 이름(키)만 추출하여 리스트로 반환
+        List<String> objectNames = new ArrayList<>();
+        for (S3Object s3Object : s3Objects) {
+            objectNames.add(s3Object.key());
+        }
+
+        return objectNames;
+    }
+    public LocalDateTime getSingleLatestModificationDateByName(String prefix, String keyword) {
+        LocalDateTime latestModificationDate = null;
+        List<String> matchedObjectKeys = new ArrayList<>();
+        String continuationToken = null;
+
+        do {
+            // S3에서 객체를 가져오는 요청 생성
+            ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix+"/")
+                    .continuationToken(continuationToken)
+                    .build();
+
+            // 요청을 실행하여 응답을 받음
+            ListObjectsV2Response listObjectsResponse = awsS3Config.s3Client().listObjectsV2(listObjectsRequest);
+
+            // 응답에서 S3 오브젝트의 이름(키)을 리스트에 추가
+            for (S3Object s3Object : listObjectsResponse.contents()) {
+                String objectKey = s3Object.key();
+
+                // 오브젝트 키가 키워드를 포함하는지 확인
+                if (objectKey.contains(keyword)) {
+                    matchedObjectKeys.add(objectKey);
+                    // 만약 2개 이상의 오브젝트가 발견되면 예외를 발생시킴
+                    if (matchedObjectKeys.size() > 1) {
+
+                        throw new IllegalStateException("여러 개의 오브젝트가 발견되었습니다. 오브젝트는 하나만 있어야 합니다.");
+                    }
+                }
+            }
+
+            // 다음 페이지가 있는지 확인하고 ContinuationToken 설정
+            continuationToken = listObjectsResponse.nextContinuationToken();
+        } while (continuationToken != null && matchedObjectKeys.isEmpty()); // 다음 페이지가 존재하면 계속 반복
+
+        // 발견된 오브젝트가 없으면 null 반환
+        if (matchedObjectKeys.isEmpty()) {
+            return null;
+        }
+
+        // 유일하게 발견된 오브젝트의 마지막 수정 시간을 가져오기
+        String objectKey = matchedObjectKeys.get(0);
+        HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectKey)
+                .build();
+
+        HeadObjectResponse headObjectResponse = awsS3Config.s3Client().headObject(headObjectRequest);
+        return LocalDateTime.ofInstant(
+                headObjectResponse.lastModified(),
+                ZoneId.systemDefault()
+        );
+    }
+
+
+    /** 특정 경로에서 이름을 포함하는 파일의 URL을 반환 */
+    public Map<String, String> getFileUrlByNameContains(String prefix, String fileNameContains) throws IOException {
+        List<String> objectKeys = new ArrayList<>();
+        String continuationToken = null;
+
+        // 모든 오브젝트 키를 가져옴
+        do {
+            ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .continuationToken(continuationToken)
+                    .build();
+
+            ListObjectsV2Response listObjectsResponse = awsS3Config.s3Client().listObjectsV2(listObjectsRequest);
+
+            objectKeys.addAll(listObjectsResponse.contents().stream()
+                    .map(S3Object::key)
+                    .collect(Collectors.toList()));
+
+            continuationToken = listObjectsResponse.nextContinuationToken();
+        } while (continuationToken != null);
+
+        // 이름을 포함하는 오브젝트를 필터링
+        List<String> matchingKeys = objectKeys.stream()
+                .filter(key -> key.contains(fileNameContains))
+                .collect(Collectors.toList());
+
+        // 하나의 파일만 발견된 경우 URL을 반환
+        if (matchingKeys.size() == 1) {
+            String matchingKey = matchingKeys.get(0);
+            return Collections.singletonMap(fileNameContains, generatePresignedUrl(matchingKey));
+        }
+
+        // 파일이 없거나 여러 개가 발견된 경우 빈 맵을 반환
+        return Collections.emptyMap();
+    }
+
+    /** 주어진 오브젝트 키에 대한 presigned URL을 생성 */
+    private String generatePresignedUrl(String keyName) throws IOException {
+        // S3Presigner 생성
+        try (S3Presigner presigner = S3Presigner.create()) {
+            // S3에서 객체 가져오기 요청 생성
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                    .signatureDuration(Duration.ofMinutes(10))
+                    .getObjectRequest(r -> r.bucket(bucketName).key(keyName))
+                    .build();
+
+            // presigned URL 생성
+            PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
+
+            return presignedRequest.url().toExternalForm();
+        }
+    }
+
+    public Map<String, String> getFileUrlByNameContainsList(String prefix, List<String> fileNameContainsList) throws IOException {
+        List<String> objectKeys = new ArrayList<>();
+        String continuationToken = null;
+
+        // 모든 오브젝트 키를 가져옴
+        do {
+            ListObjectsV2Request listObjectsRequest = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .continuationToken(continuationToken)
+                    .build();
+
+            ListObjectsV2Response listObjectsResponse = awsS3Config.s3Client().listObjectsV2(listObjectsRequest);
+
+            objectKeys.addAll(listObjectsResponse.contents().stream()
+                    .map(S3Object::key)
+                    .collect(Collectors.toList()));
+
+            continuationToken = listObjectsResponse.nextContinuationToken();
+        } while (continuationToken != null);
+
+        // 파일 이름 목록을 포함하는 오브젝트 키를 필터링
+        Map<String, String> matchingFiles = new HashMap<>();
+        for (String fileNameContains : fileNameContainsList) {
+            List<String> matchingKeys = objectKeys.stream()
+                    .filter(key -> key.contains(fileNameContains))
+                    .collect(Collectors.toList());
+
+            // 파일이 하나만 발견된 경우 URL을 반환
+            if (matchingKeys.size() == 1) {
+                String matchingKey = matchingKeys.get(0);
+                matchingFiles.put(fileNameContains, generatePresignedUrl(matchingKey));
+            }
+        }
+
+        return matchingFiles;
+    }
 }
 
