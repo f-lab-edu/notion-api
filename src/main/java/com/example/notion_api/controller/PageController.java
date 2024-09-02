@@ -82,7 +82,7 @@ public class PageController {
                                                     .build();
 
             pageService.uploadPageTemplate(userId,pageDTO);
-            PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getId(),pageMultipartDTO);
+            PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getPageId(),pageMultipartDTO);
             PageResponseDTO pageResponseDTO = new PageResponseDTO().builder()
                     .pageDTO(pageDTO)
                     .pageMultipartUrlDTO(pageMultipartUrlDTO)
@@ -128,7 +128,7 @@ public class PageController {
     }
 
     @PostMapping("/page/search")
-    public ResponseEntity<Api<PageResponseDTO>> getPage(
+    public ResponseEntity<Api<PageResponseDTO>> pageDateCompareUpdateAndGetPage(
             @RequestParam("user_id")String userId,
             @RequestParam("json") String json,
             @RequestPart("icon_file") MultipartFile iconFile,
@@ -181,10 +181,10 @@ public class PageController {
                         .build();
 
                 pageService.uploadPageTemplate(userId,pageDTO);
-                pageService.uploadPageMultipartFile(userId,pageDTO.getId(),pageMultipartDTO);
+                pageService.uploadPageMultipartFile(userId,pageDTO.getPageId(),pageMultipartDTO);
 
                 pageService.uploadPageTemplate(userId,pageDTO);
-                PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getId(),pageMultipartDTO);
+                PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getPageId(),pageMultipartDTO);
                 PageResponseDTO pageResponseDTO = new PageResponseDTO().builder()
                         .pageDTO(pageDTO)
                         .pageMultipartUrlDTO(pageMultipartUrlDTO)
@@ -204,6 +204,21 @@ public class PageController {
         } catch (IOException e) {
             throw new CustomJsonMappingException("JSON 처리 중 입출력 오류가 발생했습니다.", e);
         }
+    }
+    @DeleteMapping("page/drop")
+    public ResponseEntity<Api<String>> deletePage(
+            @RequestBody PageDeleteRequestDTO pageDeleteRequestDTO
+    ){
+        String userId = pageDeleteRequestDTO.getUserId();
+        String pageId = pageDeleteRequestDTO.getPageId();
+        pageService.deletePage(userId, pageId);
+
+        Api<String> response = Api.<String>builder()
+                .resultCode("200")
+                .resultMessage("페이지를 삭제하였습니다.")
+                .data("")
+                .build();
+        return ResponseEntity.ok(response);
     }
 
 }

@@ -35,7 +35,7 @@ public class PageService {
         if (pageType.equals("default")){
             UUID uuid = UUID.randomUUID();
             PageDTO pageDTO = PageDTO.builder()
-                    .id(uuid.toString())
+                    .pageId(uuid.toString())
                     .title("no-title")
                     .lastUpdated(LocalDateTime.now())
                     .contents(null)
@@ -70,7 +70,7 @@ public class PageService {
         objectMapper.registerModule(new JavaTimeModule());
         String jsonString = objectMapper.writeValueAsString(pageDTO);
         String title = pageDTO.getTitle();
-        s3Service.writeObjectContent("user/"+userId+"/page/"+pageDTO.getId()+"_"+title,jsonString);
+        s3Service.writeObjectContent("user/"+userId+"/page/"+pageDTO.getPageId()+"_"+title,jsonString);
     }
 
     public PageMultipartUrlDTO uploadPageMultipartFile(String userId, String id, PageMultipartDTO pageMultipartDTO) throws IOException {
@@ -160,5 +160,17 @@ public class PageService {
 
     public String getPageAsJsonString(String userId, String title) throws IOException {
         return s3Service.readObjectContentFromPath("user/"+userId+"/page",title);
+    }
+
+    public void deletePage(String userId, String pageId){
+        String[] paths = {
+                "user/"+userId+"/page/",
+                "user/"+userId+"/icon",
+                "user/"+userId+"/content/",
+                "user/"+userId+"/background/"
+        };
+        for (String path : paths){
+            s3Service.deleteObjects(path, pageId);
+        }
     }
 }

@@ -328,7 +328,6 @@ public class S3Service {
         return objectNames;
     }
     public LocalDateTime getSingleLatestModificationDateByName(String prefix, String keyword) {
-        LocalDateTime latestModificationDate = null;
         List<String> matchedObjectKeys = new ArrayList<>();
         String continuationToken = null;
 
@@ -472,6 +471,37 @@ public class S3Service {
         }
 
         return matchingFiles;
+    }
+
+    public void deleteObjects(String path, String prefix) {
+        String continuationToken = null;
+
+        do {
+            // List objects under the specified path
+            ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
+                    .bucket(bucketName)
+                    .prefix(path)
+                    .continuationToken(continuationToken)
+                    .build();
+
+            ListObjectsV2Response listResponse = awsS3Config.s3Client().listObjectsV2(listRequest);
+
+            // Filter and delete objects containing the pageId
+            List<S3Object> objects = listResponse.contents();
+            for (S3Object s3Object : objects) {
+                if (s3Object.key().contains(prefix)) {
+                    DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                            .bucket(bucketName)
+                            .key(s3Object.key())
+                            .build();
+
+                    awsS3Config.s3Client().deleteObject(deleteRequest);
+                }
+            }
+
+            // Update the continuation token for the next page of results, if any
+            continuationToken = listResponse.nextContinuationToken();
+        } while (continuationToken != null);
     }
 }
 

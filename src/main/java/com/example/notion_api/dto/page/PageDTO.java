@@ -22,7 +22,8 @@ import java.util.List;
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class PageDTO {
 
-    private String id;
+    @JsonProperty("page_id")
+    private String pageId;
     private String title;
     @JsonProperty("last_updated")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
