@@ -3,6 +3,7 @@ package com.example.notion_api.controller;
 
 import com.example.notion_api.api.Api;
 import com.example.notion_api.dto.page.*;
+import com.example.notion_api.enums.IdType;
 import com.example.notion_api.exception.CustomJsonMappingException;
 import com.example.notion_api.exception.UserNotFoundException;
 import com.example.notion_api.repository.UserRepository;
@@ -51,7 +52,7 @@ public class PageController {
             throw new UserNotFoundException("일치하는 아이디가 존재하지 않습니다.");
         }
 
-        PageDTO pageDTO = pageService.createPage(userId, pageType);
+        PageDTO pageDTO = pageService.createPage(userId, IdType.USER,pageType);
         response = Api.<PageDTO>builder()
                 .resultCode("200")
                 .resultMessage("페이지가 생성되었습니다.")
@@ -81,8 +82,8 @@ public class PageController {
                                                     .contentFileList(multipartFileList)
                                                     .build();
 
-            pageService.uploadPageTemplate(userId,pageDTO);
-            PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getPageId(),pageMultipartDTO);
+            pageService.uploadPageTemplate(userId, IdType.USER,pageDTO);
+            PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId, IdType.USER, pageDTO.getPageId(),pageMultipartDTO);
             PageResponseDTO pageResponseDTO = new PageResponseDTO().builder()
                     .pageDTO(pageDTO)
                     .pageMultipartUrlDTO(pageMultipartUrlDTO)
@@ -111,14 +112,14 @@ public class PageController {
     @GetMapping("/page/main")
     public ResponseEntity<Api<List<String>>> getMainPage(
         @RequestParam("user_id")String userId
-    ){
+    ) throws IOException {
         /**
          *  메인 페이지 가져올 때.
          *  페이지 목록 가져오기
          *  마지막으로 띄어져 있던 페이지 버전 비교 및 페이지 가져오기
          *
          */
-        List<String> allPageList = pageService.getAllPageList(userId);
+        List<String> allPageList = pageService.getAllPageList(userId, IdType.USER);
         Api<List<String>> response = Api.<List<String>>builder()
                 .resultCode("200")
                 .resultMessage("페이지 업로드를 성공하였습니다.")
@@ -154,12 +155,12 @@ public class PageController {
                     .build();
 
             // 로컬과 서버의 페이지의 최종 업데이트 시간 비교
-            if (pageService.isServerPageLastUpdated(userId, pageDTO)){
+            if (pageService.isServerPageLastUpdated(userId, IdType.USER, pageDTO)){
                 // 서버의 페이지가 최신인 경우
 
                 // 서버의 json 페이지와 아이콘, 배경이미지, 컨텐츠의 MultipartFile의 Url 읽어오기
-                PageMultipartUrlDTO multipartUrlDTO = pageService.getPageMultipartFile(userId, pageMultipartNameDTO);
-                PageDTO resPageDTO = objectMapper.readValue(pageService.getPageAsJsonString(userId,pageDTO.getTitle()),PageDTO.class);
+                PageMultipartUrlDTO multipartUrlDTO = pageService.getPageMultipartFile(userId, IdType.USER, pageDTO.getPageId(),pageMultipartNameDTO);
+                PageDTO resPageDTO = objectMapper.readValue(pageService.getPageAsJsonString(userId, IdType.USER, pageDTO.getPageId(),pageDTO.getTitle()),PageDTO.class);
                 PageResponseDTO pageResponseDTO = new PageResponseDTO().builder()
                         .pageDTO(resPageDTO)
                         .pageMultipartUrlDTO(multipartUrlDTO)
@@ -180,11 +181,11 @@ public class PageController {
                         .contentFileList(multipartFileList)
                         .build();
 
-                pageService.uploadPageTemplate(userId,pageDTO);
-                pageService.uploadPageMultipartFile(userId,pageDTO.getPageId(),pageMultipartDTO);
+                pageService.uploadPageTemplate(userId, IdType.USER,pageDTO);
+                pageService.uploadPageMultipartFile(userId, IdType.USER,pageDTO.getPageId(),pageMultipartDTO);
 
-                pageService.uploadPageTemplate(userId,pageDTO);
-                PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId,pageDTO.getPageId(),pageMultipartDTO);
+                pageService.uploadPageTemplate(userId, IdType.USER,pageDTO);
+                PageMultipartUrlDTO pageMultipartUrlDTO = pageService.uploadPageMultipartFile(userId, IdType.USER,pageDTO.getPageId(),pageMultipartDTO);
                 PageResponseDTO pageResponseDTO = new PageResponseDTO().builder()
                         .pageDTO(pageDTO)
                         .pageMultipartUrlDTO(pageMultipartUrlDTO)
@@ -211,7 +212,7 @@ public class PageController {
     ){
         String userId = pageDeleteRequestDTO.getUserId();
         String pageId = pageDeleteRequestDTO.getPageId();
-        pageService.deletePage(userId, pageId);
+        pageService.deletePage(userId, IdType.USER, pageId);
 
         Api<String> response = Api.<String>builder()
                 .resultCode("200")

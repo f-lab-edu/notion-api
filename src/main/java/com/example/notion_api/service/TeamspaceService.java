@@ -19,8 +19,11 @@ public class TeamspaceService {
 
     private final S3Service s3Service;
 
-    public TeamspaceService(S3Service s3Service) {
+    private final PageService pageService;
+
+    public TeamspaceService(S3Service s3Service, PageService pageService) {
         this.s3Service = s3Service;
+        this.pageService = pageService;
     }
 
     public ResponseCreateTeamspaceDTO createTeamspace(RequestCreateTeamspaceDTO requestCreateTeamspaceDTO, MultipartFile iconFile) throws IOException {
@@ -38,7 +41,7 @@ public class TeamspaceService {
         String jsonString = objectMapper.writeValueAsString(teamspaceDTO);
         s3Service.writeObjectContent("teamspace/"+uuid+"_"+requestCreateTeamspaceDTO.getHostId()+"/setting/json_setting",jsonString);
         s3Service.uploadFileByPath(iconFile,"teamspace/"+uuid+"_"+requestCreateTeamspaceDTO.getHostId()+"/setting");
-        String iconUrl = s3Service.downloadFileAsURL("teamspace/"+uuid+"_"+requestCreateTeamspaceDTO.getHostId()+"/setting"+iconFile.getOriginalFilename());
+        String iconUrl = s3Service.downloadFileAsURL("teamspace/"+uuid+"_"+requestCreateTeamspaceDTO.getHostId()+"/setting/"+iconFile.getOriginalFilename());
 
         ResponseCreateTeamspaceDTO responseCreateTeamspaceDTO = new ResponseCreateTeamspaceDTO().builder()
                 .teamspaceId(uuid.toString())
