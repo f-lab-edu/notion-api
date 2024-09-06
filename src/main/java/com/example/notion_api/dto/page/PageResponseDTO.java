@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UploadResponseDTO {
+public class PageResponseDTO {
 
     private PageDTO pageDTO;
 
