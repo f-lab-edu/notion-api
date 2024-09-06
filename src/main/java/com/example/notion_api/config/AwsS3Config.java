@@ -14,10 +14,14 @@ import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class AwsS3Config {
 
@@ -33,6 +37,8 @@ public class AwsS3Config {
     @Value("${aws.s3.credentials.bucket-name}")
     private String bucketName;
 
+    Logger logger = LoggerFactory.getLogger(AwsS3Config.class);
+
     @Bean
     public AmazonS3 s3Client(){
         BasicAWSCredentials awsCredentials = new BasicAWSCredentials(accessKey, secretKey);
@@ -47,35 +53,10 @@ public class AwsS3Config {
     @PostConstruct
     public void init(){
         if (!s3Client().doesBucketExistV2(bucketName)){
-            s3Client().createBucket(new CreateBucketRequest(bucketName));
-            System.out.println("버킷 생성 [버킷 이름 : "+bucketName+"]");
+            logger.debug("생성된 버킷이 없음..");
         }else {
-            System.out.println("버킷 생성 실패...(버킷이 이미 존재함)");
-            System.out.println(s3Client().getRegionName());;
+            logger.debug("버킷이 생성되어 있습니다. [버킷 이름 : \"+bucketName+\"]");
         }
-    }
-
-    @PreDestroy
-    public void cleanup(){
-        if (s3Client().doesBucketExistV2(bucketName)){
-            deleteAllObjectsInBucket(bucketName);
-
-            s3Client().deleteBucket(bucketName);
-            System.out.println("버킷 삭제 완료. [버킷 이름 : "+bucketName+"]");
-        }
-    }
-
-    private void deleteAllObjectsInBucket(String bucketName){
-        ListObjectsV2Request listObjects = new ListObjectsV2Request()
-                .withBucketName(bucketName);
-        ListObjectsV2Result result;
-        do {
-            result = s3Client().listObjectsV2(listObjects);
-            result.getObjectSummaries().forEach(summary -> s3Client().deleteObject(bucketName, summary.getKey()));
-        }while (result.isTruncated());
-        System.out.println("버킷의 모든 오브젝트 삭제");
-
-
     }
 }
 
