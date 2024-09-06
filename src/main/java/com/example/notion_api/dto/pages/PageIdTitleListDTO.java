@@ -11,7 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-public class GetPageListDTO {
-    private List<Long> pageId;
-    private List<String> title;
+public class PageIdTitleListDTO {
+    private List<PageIdTitleDTO> pageIdTitleDTOs;
 }

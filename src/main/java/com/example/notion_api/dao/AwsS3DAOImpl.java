@@ -69,9 +69,23 @@ public class AwsS3DAOImpl implements AwsS3DAO{
 
     @Override
     public void deleteFile(String remotePath, String fileName) {
-        String keyName = new StringBuilder().append(remotePath).append("/")
+        String prefix = new StringBuilder().append(remotePath).append("/")
                                                 .append(fileName).toString();
-        amazonS3.deleteObject(bucketName, keyName);
+        ListObjectsV2Request listObjectsRequest = new ListObjectsV2Request()
+                                                        .withBucketName(bucketName)
+                                                        .withPrefix(prefix);
+        ListObjectsV2Result result;
+        do {
+            result = amazonS3.listObjectsV2(listObjectsRequest);
+            for (S3ObjectSummary objectSummary : result.getObjectSummaries()){
+                String keyName = objectSummary.getKey();
+                if (keyName.contains(fileName)){
+                    amazonS3.deleteObject(bucketName, keyName);
+                    return;
+                }
+            }
+            listObjectsRequest.setContinuationToken(result.getNextContinuationToken());
+        }while (result.isTruncated());
     }
 
     @Override
