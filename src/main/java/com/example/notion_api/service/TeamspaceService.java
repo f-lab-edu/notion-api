@@ -39,9 +39,9 @@ public class TeamspaceService {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String jsonString = objectMapper.writeValueAsString(teamspaceDTO);
-        s3Service.writeObjectContent("teamspace/"+uuid+"_"+requestCreateTeamspaceDTO.getHostId()+"/setting/json_setting",jsonString);
-        s3Service.uploadFileByPath(iconFile,"teamspace/"+uuid+"_"+requestCreateTeamspaceDTO.getHostId()+"/setting");
-        String iconUrl = s3Service.downloadFileAsURL("teamspace/"+uuid+"_"+requestCreateTeamspaceDTO.getHostId()+"/setting/"+iconFile.getOriginalFilename());
+        s3Service.writeObjectContent("teamspace/"+uuid+"/"+requestCreateTeamspaceDTO.getHostId()+"/setting/json_setting",jsonString);
+        s3Service.uploadFileByPath(iconFile,"teamspace/"+uuid+"/"+requestCreateTeamspaceDTO.getHostId()+"/setting");
+        String iconUrl = s3Service.downloadFileAsURL("teamspace/"+uuid+"/"+requestCreateTeamspaceDTO.getHostId()+"/setting/"+iconFile.getOriginalFilename());
 
         ResponseCreateTeamspaceDTO responseCreateTeamspaceDTO = new ResponseCreateTeamspaceDTO().builder()
                 .teamspaceId(uuid.toString())

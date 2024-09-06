@@ -320,7 +320,7 @@ public class S3Service {
 
         return objectNames;
     }
-    public String getFirstObjectNameByPath(String prefix) {
+    public String getObjectNameByPath(String prefix) {
         String continuationToken = null;
 
         do {

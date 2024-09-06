@@ -138,7 +138,7 @@ public class PageService {
         }
         List<String> pageTitleList = new ArrayList<>();
         for (String pagePath : pagePathList){
-            pageTitleList.add(s3Service.getFirstObjectNameByPath(pagePath).split("/")[4]);
+            pageTitleList.add(s3Service.getObjectNameByPath(pagePath).split("/")[4]);
         }
 
         return pageTitleList;
