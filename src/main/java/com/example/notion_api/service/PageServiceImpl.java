@@ -4,11 +4,15 @@ import com.example.notion_api.dao.AwsS3DAOImpl;
 import com.example.notion_api.dto.pages.CreatePageDTO;
 import com.example.notion_api.dto.pages.GetPageListDTO;
 import com.example.notion_api.dto.pages.PageDTO;
+import com.example.notion_api.util.DateTimeUtil;
+import com.example.notion_api.util.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PageServiceImpl implements PageService{
@@ -22,8 +26,26 @@ public class PageServiceImpl implements PageService{
 
     @Override
     public CreatePageDTO createPage(String userId, String pageType) throws IOException {
-        awsS3DAO.updateStringAsFile(userId,"test","test");
-        return null;
+        Long pageId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        String title = "no-title";
+        String icon = "no-icon";
+        String coverImage = "no-coverImage";
+        String datetime = DateTimeUtil.formatLocalDateTime(LocalDateTime.now());
+
+        String fileName = new StringBuilder()
+                .append(pageId).append("_")
+                .append(userId).append("_")
+                .append(title).append("_")
+                .append(icon).append("_")
+                .append(coverImage).append("_")
+                .append(datetime)
+                .toString();
+
+        String content = PageUtil.getPageContent(pageType);
+
+        awsS3DAO.uploadStringAsFile(userId,fileName,content);
+        CreatePageDTO createPageDTO = new CreatePageDTO(pageId, content);
+        return createPageDTO;
     }
 
     @Override
