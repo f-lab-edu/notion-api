@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AwsS3Config {
 
-    @Value("{aws.s3.credentials.access-key}")
+    @Value("${aws.s3.credentials.access-key}")
     private String accessKey;
 
     @Value("${aws.s3.credentials.secret-key}")

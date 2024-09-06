@@ -19,7 +19,5 @@ public interface PageService {
 
     void deletePage(String userId, String pageId);
 
-    List<PageDTO> createTemplatePages(String userId);
-
-    List<PageDTO> getPagesByVersion(String userId, String pageId);
+    List<PageDTO> createTemplatePages(String userId) throws IOException;
 }

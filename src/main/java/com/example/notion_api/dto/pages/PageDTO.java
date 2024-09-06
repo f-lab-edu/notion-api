@@ -1,5 +1,6 @@
 package com.example.notion_api.dto.pages;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ public class PageDTO {
     private String title;
     private String icon;
     private String coverImage;
-    @DateTimeFormat(pattern = "dd.MM.yy HH:mm:ss")
+    @JsonFormat(pattern = "yy.MM.dd HH:mm:ss")
     private LocalDateTime updatedDate;
     private String content;
 }

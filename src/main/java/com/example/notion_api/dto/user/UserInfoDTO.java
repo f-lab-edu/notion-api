@@ -24,6 +24,6 @@ public class UserInfoDTO {
      * 로컬과 서버의 유저 데이터에 '최종 동기화된 시간'값을 갖도록 하며
      * 로컬과 서버의 업데이트 기준이 됨.
      * */
-    @DateTimeFormat(pattern = "dd.MM.yy HH:mm:ss")
+    @DateTimeFormat(pattern = "yy.MM.dd HH:mm:ss")
     private LocalDateTime syncDate;
 }

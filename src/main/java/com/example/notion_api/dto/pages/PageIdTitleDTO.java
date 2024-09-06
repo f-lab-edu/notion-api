@@ -1,14 +1,11 @@
 package com.example.notion_api.dto.pages;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Builder
 public class PageIdTitleDTO {
     private String pageId;
     private String title;
