@@ -1,15 +1,17 @@
 package com.example.notion_api.dto.user;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-public class UserAuthDTO {
+@Builder
+public class UserDTO {
     private String userId;
     private String password;
+    private String email;
+    private String lastUpdated;
 }
